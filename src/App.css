@@ -41,3 +41,15 @@ main {
     transform: rotate(360deg);
   }
 }
+
+.game {
+  width: 560px;
+  height: 560px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.game img {
+  width: 70px;
+  height: 70px;
+}

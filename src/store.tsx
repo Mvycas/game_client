@@ -3,10 +3,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import userLoginReducer from "./reducers/userReducer";
 import registerReducer from "./reducers/registerReducer";
+import boardReducer from "./reducers/boardReducer";
 
 const reducers = combineReducers({
   loginReducer: userLoginReducer,
   registerReducer,
+  boardReducer,
 });
 
 // const initialState = {};
@@ -14,7 +16,10 @@ const reducers = combineReducers({
 const store = configureStore({
   reducer: reducers,
   // preloadedState: initialState,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(thunk),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

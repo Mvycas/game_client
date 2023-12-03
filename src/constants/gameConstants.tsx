@@ -1,4 +1,14 @@
-export const CREATE_BOARD = 'CREATE_BOARD';
-export const MOVE_PIECES = 'MOVE_PIECES';
-export const APPLY_EFFECTS = 'APPLY_EFFECTS';
+export const SAVE_BOARD = "SAVE_BOARD";
+export const GAME_STARTED = "GAME_STARTED";
 
+export const candyColors: string[] = [
+  "blue",
+  "green",
+  "red",
+  "orange",
+  "purple",
+  "yellow",
+];
+
+export const boardWidth = 8;
+export const boardDepth = 8;

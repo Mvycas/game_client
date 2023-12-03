@@ -16,15 +16,8 @@ export type Board<T> = {
     tiles: T[][] 
 };
 
-export type Effect<T> =
-    {
-        kind: 'Match' | 'Refill',
-        match?: Match<T>
-    }
-
 export type MoveResult<T> = {
     board: Board<T>,
-    effects: Effect<T>[]
 };
 
 // export function createBoard(generator: Generator<string>, rows: number, columns: number): Board<string> {
@@ -63,22 +56,15 @@ export function canMove<T>(board: Board<T>, first: Position, second: Position): 
 export function move<T>(generator: Generator<T>, board: Board<T>, first: Position, second: Position): MoveResult<T> {
     
     let newBoard = swapTiles(board.tiles, first, second);
-    
-    let effects: Effect<T>[] = [];
-    
+        
     let matches = findMatches(newBoard);
-    
+    console.log("s",matches);
     // If no matches found, "swap back" the tiles
     if (matches.length === 0) {
         newBoard = swapTiles(newBoard, first, second);
     } else {
         while (matches.length > 0) {
-            matches.forEach(match => {
-                effects.push({
-                    kind: 'Match',
-                    match: match
-                });
-                
+            matches.forEach(() => {
                 newBoard = clearMatches(newBoard, matches);
             });
             
@@ -93,8 +79,7 @@ export function move<T>(generator: Generator<T>, board: Board<T>, first: Positio
             w: board.w,
             h: board.h,
             tiles: newBoard
-        },
-        effects: effects
+        }
     };
 }
 
@@ -116,6 +101,7 @@ const clearMatches = <T>(board: T[][], matches: Match<T>[]): T[][] => {
     return cloneBoard;
 }
 
+
 const findMatches = <T>(board: T[][]): Match<T>[] => {
     const matches: Match<T>[] = [];
     const height = board.length;
@@ -125,19 +111,24 @@ const findMatches = <T>(board: T[][]): Match<T>[] => {
         for (let col = 0; col < width; col++) {
             const position: Position = { row, col };
             const tile = board[row][col];
-            const horizontalMatch = checkForMatch(board, position, 'horizontal');
-            const verticalMatch = checkForMatch(board, position, 'vertical');
 
+            // Check for horizontal matches
+            const horizontalMatch = checkForMatch(board, position, 'horizontal');
             if (horizontalMatch.length >= 3) {
                 matches.push({ matched: tile, positions: horizontalMatch });
             }
+
+            // Check for vertical matches
+            const verticalMatch = checkForMatch(board, position, 'vertical');
             if (verticalMatch.length >= 3) {
                 matches.push({ matched: tile, positions: verticalMatch });
             }
         }
     }
+    
     return matches;
 }
+
 
 // checkForMatch - helper for findMatches search horizontally or vertically for matching tiles
 const checkForMatch = <T>(board: T[][], start: Position, direction: 'horizontal' | 'vertical'): Position[] => {
