@@ -9,6 +9,8 @@ import { getBoard, moveTile } from "./createBoard";
 import { Position, canMove } from "../game/board";
 import "./gameScreen.css";
 import { useNavigate } from "react-router";
+import canva from "../images/Untitled.png";
+import randomIntFromInterval from "../helperFunctions/randomIntFromInterval";
 
 const GameScreen = () => {
   const [timer, setTimer] = useState<number>(0);
@@ -33,8 +35,7 @@ const GameScreen = () => {
 
   useEffect(() => {
     if (isGameRunning) {
-      setTimer(180);
-
+      setTimer(randomIntFromInterval(60, 290));
       const timerId = setInterval(() => {
         setTimer((prevTimer) => {
           if (prevTimer > 0) {
@@ -120,21 +121,40 @@ const GameScreen = () => {
           height: "100%",
         }}
       >
-        <Button
-          className="button-64"
-          onClick={createNewGame}
-          style={{
-            marginBottom: "2rem",
-            width: "16rem",
-            height: "3rem",
-          }}
-        >
-          Create New Game
-        </Button>
+        <div>
+          {!isGameRunning ? (
+            <Button
+              className="button-64"
+              onClick={createNewGame}
+              style={{
+                marginBottom: "2rem",
+                width: "16rem",
+                height: "3rem",
+              }}
+            >
+              Create New Game
+            </Button>
+          ) : null}
+        </div>
       </div>
 
-      <div>
-        {isGameRunning ? <h1 data-heading={`${timer}`}>{timer}</h1> : null}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {!isGameRunning ? (
+          <img
+            src={canva}
+            alt={canva}
+            style={{
+              marginTop: "25px",
+              borderRadius: "125px",
+            }}
+          ></img>
+        ) : null}
       </div>
 
       <div>
