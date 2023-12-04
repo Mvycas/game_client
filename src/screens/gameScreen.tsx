@@ -7,6 +7,7 @@ import { AppDispatch } from "../store";
 import { saveBoard, startNewGame } from "../actions/gameActions";
 import { getBoard, moveTile } from "./createBoard";
 import { Position, canMove } from "../game/board";
+import "./gameScreen.css";
 
 const GameScreen = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -47,7 +48,7 @@ const GameScreen = () => {
   // };
 
   const createNewGame = () => {
-    const board = getBoard(); // Assuming this is synchronous
+    const board = getBoard();
     dispatch(startNewGame(board));
     // Reset the selected tile when starting a new game
     setFirstSelectedTile(null);
@@ -55,9 +56,11 @@ const GameScreen = () => {
 
   const rowStyle = {
     display: "flex",
+    justifyContent: "center",
   };
 
   const tileStyle = {
+    paddingTop: "0.13em",
     width: "70px",
     height: "70px",
   };
@@ -71,27 +74,56 @@ const GameScreen = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "30px" }}>
-      <Button onClick={createNewGame}>Create New Game</Button>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: "30px",
+      }}
+    >
+      {/* MENU */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <Button
+          className="button-64"
+          onClick={createNewGame}
+          style={{
+            marginBottom: "2rem",
+            width: "16rem",
+            height: "3rem",
+          }}
+        >
+          Create New Game
+        </Button>
+      </div>
+      {/* MENU */}
+
       <div>
         {currentBoardArrangement.tiles.map((row, rowIndex) => (
           <div key={rowIndex} style={rowStyle}>
             {row.map((candyColor, colIndex) => (
-              <div
+              <img
                 key={`${rowIndex}-${colIndex}`}
+                src={candyColor}
+                alt={candyColor}
                 style={{
                   ...tileStyle,
                   backgroundColor: candyColor,
                   border: isTileSelected(rowIndex, colIndex)
                     ? "3px solid blue"
-                    : "none", // Highlight selected tile
+                    : "3px solid transparent", // if tile is not selected, display transparent. Just some styling. Hard to explain, you can change it to "none" and you will see
+                  borderRadius: "17px",
                 }}
                 onClick={() =>
                   handleTileClick({ row: rowIndex, col: colIndex })
                 }
-              >
-                {candyColor}
-              </div>
+              />
             ))}
           </div>
         ))}

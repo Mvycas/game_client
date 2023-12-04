@@ -11,10 +11,12 @@ export const startNewGame = (randomColorArrangement : any) => {
   };
 
   export const saveBoard = (ColorArrangement : any) => {
-    return (dispatch: Dispatch) => {
+    return async (dispatch: Dispatch) => {
       dispatch({
+        // fetch() DONT DO THAT / DISPATCH THUNK ACTION AND MAKE THUNK FOR ADDING BOARD TO GAMESERV
         type: SAVE_BOARD,
         payload: ColorArrangement,
       });
+      // dispatch ....
     };
   };

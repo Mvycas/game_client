@@ -56,6 +56,7 @@ export function canMove<T>(board: Board<T>, first: Position, second: Position): 
 export function move<T>(generator: Generator<T>, board: Board<T>, first: Position, second: Position): MoveResult<T> {
     
     let newBoard = swapTiles(board.tiles, first, second);
+    
         
     let matches = findMatches(newBoard);
     console.log("s",matches);
@@ -64,9 +65,8 @@ export function move<T>(generator: Generator<T>, board: Board<T>, first: Positio
         newBoard = swapTiles(newBoard, first, second);
     } else {
         while (matches.length > 0) {
-            matches.forEach(() => {
-                newBoard = clearMatches(newBoard, matches);
-            });
+
+            newBoard = clearMatches(newBoard, matches);
             
             newBoard = refill(newBoard, generator);
             

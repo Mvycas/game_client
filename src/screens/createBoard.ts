@@ -39,7 +39,8 @@ import {create, move, Position} from "../game/board"
     }
 
     function init() {
-        generator = new SequenceGenerator(candyColors);
+        const candyColorsArray = Object.values(candyColors); // This creates an array of the image paths
+        generator = new SequenceGenerator(candyColorsArray);
         board = create(generator, boardWidth, boardDepth);
         return board;
     }
