@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,11 +8,22 @@ import { saveBoard, startNewGame } from "../actions/gameActions";
 import { getBoard, moveTile } from "./createBoard";
 import { Position, canMove } from "../game/board";
 import "./gameScreen.css";
+import { useNavigate } from "react-router";
 
 const GameScreen = () => {
+  const [timer, setTimer] = useState<number>(0);
+  const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const currentBoardArrangement = useSelector(
     (state: RootState) => state.boardReducer.board
+  );
+
+  const isGameRunning = useSelector(
+    (state: RootState) => state.boardReducer.gameState
+  );
+
+  const score = useSelector(
+    (state: RootState) => state.boardReducer.board.score
   );
 
   // State to track the first selected tile position
@@ -20,17 +31,36 @@ const GameScreen = () => {
     null
   );
 
+  useEffect(() => {
+    if (isGameRunning) {
+      setTimer(180);
+
+      const timerId = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer > 0) {
+            return prevTimer - 1;
+          } else {
+            clearInterval(timerId);
+            navigate("/login");
+            return 0;
+          }
+        });
+      }, 1000);
+
+      // Clear the interval on component unmount or if the game stops running
+      return () => clearInterval(timerId);
+      // DISPATCH ENDGAME TO STORE. SEND SCORE TO SERVER AND RESET STATES
+    }
+  }, [isGameRunning, navigate]);
   const handleTileClick = (position: Position) => {
     if (firstSelectedTile) {
       // Dispatch the action to save the updated board state
       if (canMove(currentBoardArrangement, firstSelectedTile, position)) {
+        console.log(score);
         dispatch(
           saveBoard(
             moveTile(firstSelectedTile, position, currentBoardArrangement).board
           )
-        );
-        console.log(
-          moveTile(firstSelectedTile, position, currentBoardArrangement).board
         );
       } else console.log("cannot move");
       // Reset firstSelectedTile after attempting the move
@@ -102,6 +132,14 @@ const GameScreen = () => {
           Create New Game
         </Button>
       </div>
+
+      <div>
+        {isGameRunning ? <h1 data-heading={`${timer}`}>{timer}</h1> : null}
+      </div>
+
+      <div>
+        {isGameRunning ? <h1 data-heading={`${score}`}>{score}</h1> : null}
+      </div>
       {/* MENU */}
 
       <div>
@@ -116,8 +154,8 @@ const GameScreen = () => {
                   ...tileStyle,
                   backgroundColor: candyColor,
                   border: isTileSelected(rowIndex, colIndex)
-                    ? "3px solid blue"
-                    : "3px solid transparent", // if tile is not selected, display transparent. Just some styling. Hard to explain, you can change it to "none" and you will see
+                    ? "4px solid gold"
+                    : "4px solid transparent", // if tile is not selected, display transparent. Just some styling. Hard to explain, you can change it to "none" and you will see
                   borderRadius: "17px",
                 }}
                 onClick={() =>

@@ -3,7 +3,8 @@ import { SAVE_BOARD, GAME_STARTED } from '../constants/gameConstants';
 interface GameBoard {
     w: number;       // Width of the board
     h: number;       // Height of the board
-    tiles: string[][]; // An array of string arrays representing the tiles
+    tiles: string[][];
+    score: number;  
 }
 
 interface GameState {
@@ -16,7 +17,8 @@ const initialState: GameState = {
     board: {
       w: 0, // Initial width
       h: 0, // Initial height
-      tiles: [] // Initial tiles
+      tiles: [], // Initial tiles
+      score: 0
     },
   };
 

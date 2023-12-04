@@ -13,7 +13,8 @@ export type Match<T> = {
 export type Board<T> = {
     w: number, 
     h: number,
-    tiles: T[][] 
+    tiles: T[][],
+    score: number  
 };
 
 export type MoveResult<T> = {
@@ -32,9 +33,9 @@ export type MoveResult<T> = {
 //     return new Board(tiles);
 // }
 
-export function create<T>(generator: Generator<T>, width: number, height: number): Board<T> {
+export function create<T>(generator: Generator<T>, width: number, height: number, score: number): Board<T> {
     const tiles: T[][] = Array.from({ length: height }, () => Array.from({ length: width }, () => generator.next()));
-    return { w: width, h: height, tiles };
+    return { w: width, h: height, tiles, score };
 }
 
 export function piece<T>(board: Board<T>, p: Position): T | undefined {
@@ -57,6 +58,7 @@ export function move<T>(generator: Generator<T>, board: Board<T>, first: Positio
     
     let newBoard = swapTiles(board.tiles, first, second);
     
+    let gameScore = board.score;
         
     let matches = findMatches(newBoard);
     console.log("s",matches);
@@ -65,6 +67,8 @@ export function move<T>(generator: Generator<T>, board: Board<T>, first: Positio
         newBoard = swapTiles(newBoard, first, second);
     } else {
         while (matches.length > 0) {
+
+            gameScore+=100;
 
             newBoard = clearMatches(newBoard, matches);
             
@@ -78,7 +82,8 @@ export function move<T>(generator: Generator<T>, board: Board<T>, first: Positio
         board: {
             w: board.w,
             h: board.h,
-            tiles: newBoard
+            tiles: newBoard,
+            score: gameScore
         }
     };
 }
