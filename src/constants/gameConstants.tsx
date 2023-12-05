@@ -5,7 +5,6 @@ import yellow from "../images/block_flash_jelly.png";
 import green from "../images/block_forest_jelly.png";
 import blue from "../images/block_ice_jelly.png";
 
-
 export const SAVE_BOARD = "SAVE_BOARD";
 export const GAME_STARTED = "GAME_STARTED";
 

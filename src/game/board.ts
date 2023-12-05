@@ -33,9 +33,38 @@ export type MoveResult<T> = {
 //     return new Board(tiles);
 // }
 
-export function create<T>(generator: Generator<T>, width: number, height: number, score: number): Board<T> {
-    const tiles: T[][] = Array.from({ length: height }, () => Array.from({ length: width }, () => generator.next()));
+export function create<T>(generator: Generator<T>, width: number, height: number, score: number, placeholder: T): Board<T> {
+    let tiles: T[][] = createEmptyBoard(width, height, placeholder);
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            let tile;
+            do {
+                tile = generator.next();
+            } while (isMatch(tiles, x, y, tile));
+            tiles[y][x] = tile;
+        }
+    }
+
     return { w: width, h: height, tiles, score };
+}
+
+function isMatch<T>(board: T[][], x: number, y: number, tile: T): boolean {
+    // Check horizontally
+    if (x >= 2 && tile === board[y][x - 1] && tile === board[y][x - 2]) {
+        return true;
+    }
+
+    // Check vertically
+    if (y >= 2 && tile === board[y - 1][x] && tile === board[y - 2][x]) {
+        return true;
+    }
+
+    return false;
+}
+
+function createEmptyBoard<T>(width: number, height: number, placeholder: T): T[][] {
+    return Array.from({ length: height }, () => Array.from({ length: width }, () => placeholder));
 }
 
 export function piece<T>(board: Board<T>, p: Position): T | undefined {

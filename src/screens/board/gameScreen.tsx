@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "../store";
-import { AppDispatch } from "../store";
-import { saveBoard, startNewGame } from "../actions/gameActions";
+import { RootState } from "../../store";
+import { AppDispatch } from "../../store";
+import { saveBoard, startNewGame } from "../../actions/gameActions";
 import { getBoard, moveTile } from "./createBoard";
-import { Position, canMove } from "../game/board";
+import { Position, canMove } from "../../game/board";
 import "./gameScreen.css";
 import { useNavigate } from "react-router";
-import canva from "../images/Untitled.png";
-import randomIntFromInterval from "../helperFunctions/randomIntFromInterval";
+import canva from "../../images/Untitled.png";
+import randomIntFromInterval from "../../helperFunctions/randomIntFromInterval";
 
 const GameScreen = () => {
   const [timer, setTimer] = useState<number>(0);

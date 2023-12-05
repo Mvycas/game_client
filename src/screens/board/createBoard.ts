@@ -1,20 +1,8 @@
-import {candyColors} from "../constants/gameConstants"
-import {boardWidth, boardDepth} from "../constants/gameConstants"
-import {create, move, Position} from "../game/board"
+import {candyColors} from "../../constants/gameConstants"
+import {boardWidth, boardDepth} from "../../constants/gameConstants"
+import {create, move, Position} from "../../game/board"
 
 
-
-    // const createBoard = () => {
-    //     const randomColorArrangement = [];
-    
-    //     for(let i = 0; i < boardWidth*boardWidth; i++)
-    //     {
-    //         const randomColor = candyColors[Math.floor(Math.random()*candyColors.length)];
-    //         randomColorArrangement.push(randomColor);
-    //     }
-    
-    //     return randomColorArrangement;
-    // }
 
     type Generator<T> = { next: () => T };
 
@@ -43,7 +31,7 @@ import {create, move, Position} from "../game/board"
     function init() {
         const candyColorsArray = Object.values(candyColors); // This creates an array of the image paths
         generator = new SequenceGenerator(candyColorsArray);
-        board = create(generator, boardWidth, boardDepth, score);
+        board = create(generator, boardWidth, boardDepth, score, null);
         return board;
     }
 
