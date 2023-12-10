@@ -16,6 +16,11 @@ const GameScreen = () => {
   const [timer, setTimer] = useState<number>(0);
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+  const LoginState = useSelector((state: RootState) => state.loginReducer);
+  const error = useSelector((state: RootState) => state.loginReducer.error);
+  const isLoggedIn = LoginState?.isLoggedIn;
+  const userInfo: any = LoginState?.userData;
+  
   const currentBoardArrangement = useSelector(
     (state: RootState) => state.boardReducer.board
   );
@@ -42,7 +47,7 @@ const GameScreen = () => {
             return prevTimer - 1;
           } else {
             clearInterval(timerId);
-            navigate("/login");
+            navigate("/login"); //dispatch(endGame(score, userId))
             return 0;
           }
         });
