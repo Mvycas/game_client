@@ -7,15 +7,13 @@ import {
   USER_LOGIN_FAIL,
   USER_REGISTER_REQ,
   USER_REGISTER_SUCCESS,
-  USER_REGISTER_FAIL
-
+  USER_REGISTER_FAIL,
 } from "../constants/userConstants";
 import { RootState } from "../store";
 
-export const login = ( username: String, password: String) =>
-  async (dispatch : Dispatch) => {
+export const login =
+  (username: String, password: String) => async (dispatch: Dispatch) => {
     try {
-      
       dispatch({
         type: USER_LOGIN_REQ,
       });
@@ -50,10 +48,9 @@ export const login = ( username: String, password: String) =>
     }
   };
 
-  export const register = ( username: String, password: String) =>
-  async (dispatch : Dispatch) => {
+export const register =
+  (username: String, password: String) => async (dispatch: Dispatch) => {
     try {
-      
       dispatch({
         type: USER_REGISTER_REQ,
       });
@@ -75,7 +72,6 @@ export const login = ( username: String, password: String) =>
         type: USER_REGISTER_SUCCESS,
         payload: userData,
       });
-
     } catch (error: any) {
       dispatch({
         type: USER_REGISTER_FAIL,
@@ -87,26 +83,25 @@ export const login = ( username: String, password: String) =>
     }
   };
 
-  export const setError = (error : String)  =>
-  async (dispatch : Dispatch) => {
-      dispatch({
-        type: USER_REGISTER_FAIL,
-        payload: error
-      });
+export const setError = (error: String) => async (dispatch: Dispatch) => {
+  dispatch({
+    type: USER_REGISTER_FAIL,
+    payload: error,
+  });
+};
+
+export const logout =
+  (): ThunkAction<void, RootState, unknown, Action<string>> =>
+  async (dispatch, getState) => {
+    const token: any = getState().loginReducer?.token;
+    localStorage.removeItem("userInfo");
+    dispatch({ type: USER_LOGOUT });
+
+    await fetch(
+      `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   };
-
-  export const logout =
-    (): ThunkAction<void, RootState, unknown, Action<string>> =>
-    async (dispatch, getState) => {
-      const token: any = getState().loginReducer?.token;
-      localStorage.removeItem("userInfo");
-      dispatch({ type: USER_LOGOUT });
-
-      await fetch(
-        `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    };
