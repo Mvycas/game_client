@@ -75,7 +75,7 @@ export const endGame = (gameId: number, userToken: string) => {
 };
 
 export const startNewGame =
-  (randomColorArrangement: any, userToken: string, timeLeft: number) =>
+  (randomColorArrangement: any, userToken: string, timeAllocated: number, startTime: any) =>
   async (dispatch: Dispatch) => {
     try {
       const response = await fetch(
@@ -94,7 +94,8 @@ export const startNewGame =
           payload: {
             randomColorArrangement,
             GameDetails,
-            timeLeft
+            timeAllocated,
+            startTime,
           },
         });
       } else {

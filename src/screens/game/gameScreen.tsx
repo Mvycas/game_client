@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,16 +8,22 @@ import { saveBoard, startNewGame, endGame } from "../../thunks/gameThunk";
 import { getBoard, moveTile } from "./createBoard";
 import { Position, canMove } from "../../game/board";
 import "./gameScreen.css";
-import { useNavigate } from "react-router";
 import canva from "../../images/Untitled.png";
 import randomIntFromInterval from "../../helperFunctions/randomIntFromInterval";
 import EndGame from "./EndGame";
+import { pauseGame, resumeGame } from "../../Actions/GameTime";
 
 const GameScreen = () => {
-  const [timer, setTimer] = useState<number>(0);
-  const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
-  const timeRef = useRef<number>(0);
+
+  const totalTime = useSelector(
+    (state: RootState) => state.boardReducer.totalTime
+  );
+  const [remainingTime, setRemainingTime] = useState(totalTime);
+
+  const startTime = useSelector(
+    (state: RootState) => state.boardReducer.startTime
+  );
 
   const isLoggedIn = useSelector(
     (state: RootState) => state.loginReducer.isLoggedIn
@@ -44,27 +50,24 @@ const GameScreen = () => {
   const [firstSelectedTile, setFirstSelectedTile] = useState<Position | null>(
     null
   );
+  console.log("total time" + totalTime + "remainingTime" + remainingTime);
 
   useEffect(() => {
+    let timerId: any;
     if (isGameRunning) {
-      setTimer(timeRef.current);
-      const timerId = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer > 0) {
-            return prevTimer - 1;
-          } else {
+      timerId = setInterval(() => {
+        setRemainingTime((prevTime: number) => {
+          if (prevTime <= 0) {
             clearInterval(timerId);
-            dispatch(endGame(gameId, LoggedUserToken)); //end
-            return 0;
+            dispatch(endGame(gameId, LoggedUserToken));
+            return 0; // Ensure the remaining time doesn't go negative
           }
+          return prevTime - 1;
         });
       }, 1000);
-
-      // Clear the interval on component unmount or if the game stops running
-      return () => clearInterval(timerId);
-      // DISPATCH ENDGAME TO STORE. SEND SCORE TO SERVER AND RESET STATES
     }
-  }, [LoggedUserToken, dispatch, gameId, isGameRunning, navigate]);
+    return () => clearInterval(timerId); // Clear interval on unmount
+  }, [isGameRunning, dispatch, gameId, LoggedUserToken]);
 
   const handleTileClick = (position: Position) => {
     if (firstSelectedTile) {
@@ -78,7 +81,7 @@ const GameScreen = () => {
             gameId,
             LoggedUserToken,
             score,
-            timer
+            remainingTime
           )
         );
       } else console.log("cannot move");
@@ -92,8 +95,12 @@ const GameScreen = () => {
 
   const createNewGame = () => {
     const board = getBoard();
-    timeRef.current = randomIntFromInterval(3, 5);
-    dispatch(startNewGame(board, LoggedUserToken, timeRef.current));
+    // Generate a new random time interval
+    const newTimeAllocated = randomIntFromInterval(60, 290);
+    setRemainingTime(newTimeAllocated);
+    dispatch(
+      startNewGame(board, LoggedUserToken, newTimeAllocated, Date.now())
+    );
     // Reset the selected tile when starting a new game
     setFirstSelectedTile(null);
   };
@@ -125,9 +132,33 @@ const GameScreen = () => {
         padding: "30px",
       }}
     >
+      <Button
+        className="button-64"
+        onClick={() => dispatch(pauseGame(startTime, totalTime))}
+        style={{
+          marginBottom: "2rem",
+          width: "16rem",
+          height: "3rem",
+        }}
+      >
+        pause
+      </Button>
+
+      <Button
+        className="button-64"
+        onClick={() => dispatch(resumeGame())}
+        style={{
+          marginBottom: "2rem",
+          width: "16rem",
+          height: "3rem",
+        }}
+      >
+        resume
+      </Button>
+
       {/* Conditionally render EndGame */}
       {isEnd && !isGameRunning && (
-        <EndGame score={score} time={timeRef.current}></EndGame>
+        <EndGame score={score} time={totalTime}></EndGame>
       )}
 
       {/* MENU */}

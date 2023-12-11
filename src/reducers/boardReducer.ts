@@ -1,5 +1,5 @@
 import { initializeConnect } from 'react-redux/es/components/connect';
-import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, CONTINUE_GAME } from '../constants/gameConstants';
+import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME } from '../constants/gameConstants';
 
 interface GameBoard {
     w: number;       // Width of the board
@@ -11,7 +11,9 @@ interface GameBoard {
 interface GameState {
     isRunning: boolean; 
     isEnd: boolean; 
-    timeLeft: number;
+    startTime: any;
+    totalTime: number;
+    remainingTime: number;
     error: string;
     board: GameBoard;  
     gameId: number; 
@@ -26,7 +28,9 @@ const initialState: GameState = {
     isEnd: false,
     error: "",
     gameId: -1,
-    timeLeft: 0,
+    startTime: null,
+    totalTime: 0, 
+    remainingTime: 0,
     board: {
       w: 0, 
       h: 0, 
@@ -38,16 +42,21 @@ const initialState: GameState = {
 const boardReducer = (state: GameState = initialState, action: any) => {
   switch (action.type) {
     case GAME_STARTED:
-      return { ...state, isRunning: true, board: action.payload.randomColorArrangement, gameId: action.payload.GameDetails.id, timeLeft: action.payload.timeLeft };
+      return { ...state, isRunning: true, board: action.payload.randomColorArrangement, 
+        gameId: action.payload.GameDetails.id,
+        startTime: action.payload.startTime,
+        totalTime: action.payload.timeAllocated,
+        remainingTime: action.payload.totalTime,
+      };
     case SAVE_BOARD:
-      return { ...state, board: action.payload.randomColorArrangement, timeLeft: action.payload.timeLeft};
+      return { ...state, board: action.payload.randomColorArrangement, remainingTime: action.payload.timeLeft};
     case REQ_FAILED:
       return { ...state, error: action.payload };
     case GAME_END:
-      return { ...state, isEnd: true, isRunning: false, timeLeft: 0}; // Reset to initial state + add true flag to inform that the game is completed
+      return { ...state, isEnd: true, isRunning: false, remainingTime: 0}; // Reset to initial state + add true flag to inform that the game is completed
     case PAUSE_GAME:
-      return {...state, isRunning: false, timeLeft: action.payload};
-    case CONTINUE_GAME:
+      return {...state, isRunning: false, remainingTime: action.payload.remainingTime};
+    case RESUME_GAME:
       return {...state, isRunning: true};
     default:
       return state;

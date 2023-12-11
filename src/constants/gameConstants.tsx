@@ -10,7 +10,7 @@ export const GAME_STARTED = "GAME_STARTED";
 export const GAME_START_REQ = "GAME_START_REQ";
 export const REQ_FAILED = "REQ_FAILED";
 export const GAME_END = "GAME_END";
-export const CONTINUE_GAME = "CONTINUE_GAME";
+export const RESUME_GAME = "RESUME_GAME";
 export const PAUSE_GAME = "PAUSE_GAME";
 
 export const candyColors = {
