@@ -12,6 +12,7 @@ export const REQ_FAILED = "REQ_FAILED";
 export const GAME_END = "GAME_END";
 export const RESUME_GAME = "RESUME_GAME";
 export const PAUSE_GAME = "PAUSE_GAME";
+export const UPDATE_TIME = "UPDATE_TIME";
 
 export const candyColors = {
   white,

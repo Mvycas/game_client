@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,18 +11,28 @@ import "./gameScreen.css";
 import canva from "../../images/Untitled.png";
 import randomIntFromInterval from "../../helperFunctions/randomIntFromInterval";
 import EndGame from "./EndGame";
-import { pauseGame, resumeGame } from "../../Actions/GameTime";
+import { pauseGame, resumeGame, updateTime } from "../../Actions/GameTime";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const GameScreen = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const totalTime = useSelector(
-    (state: RootState) => state.boardReducer.totalTime
+  const remainingTimeRedux = useSelector(
+    (state: RootState) => state.boardReducer.remainingTime
   );
-  const [remainingTime, setRemainingTime] = useState(totalTime);
+  const [getRemainingTime, setRemainingTime] = useState(remainingTimeRedux);
 
-  const startTime = useSelector(
-    (state: RootState) => state.boardReducer.startTime
+  const getRemainingTimeRef = useRef(getRemainingTime);
+
+  useEffect(() => {
+    getRemainingTimeRef.current = getRemainingTime;
+  }, [getRemainingTime]);
+
+  const allocatedTime = useSelector(
+    (state: RootState) => state.boardReducer.allocatedTime
+  );
+  const wasGamePaused = useSelector(
+    (state: RootState) => state.boardReducer.isPaused
   );
 
   const isLoggedIn = useSelector(
@@ -50,24 +60,40 @@ const GameScreen = () => {
   const [firstSelectedTile, setFirstSelectedTile] = useState<Position | null>(
     null
   );
-  console.log("total time" + totalTime + "remainingTime" + remainingTime);
 
+  const location = useLocation();
+
+  console.log(
+    "total time" + allocatedTime + "remainingTime" + getRemainingTime
+  );
   useEffect(() => {
     let timerId: any;
     if (isGameRunning) {
       timerId = setInterval(() => {
-        setRemainingTime((prevTime: number) => {
-          if (prevTime <= 0) {
+        setRemainingTime((prevRemainingTime: number) => {
+          if (prevRemainingTime <= 0) {
             clearInterval(timerId);
             dispatch(endGame(gameId, LoggedUserToken));
             return 0; // Ensure the remaining time doesn't go negative
           }
-          return prevTime - 1;
+          return prevRemainingTime - 1;
         });
       }, 1000);
     }
-    return () => clearInterval(timerId); // Clear interval on unmount
-  }, [isGameRunning, dispatch, gameId, LoggedUserToken]);
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [isGameRunning, dispatch, gameId, LoggedUserToken, location.pathname]);
+  // Whenever these [] changed, useeffect fires // THEORY!!!!!
+
+  useEffect(() => {
+    // if (location.pathname === "/" && wasGamePaused) {
+    //   dispatch(resumeGame());
+    // } /// HAVE RESUME BUTTON DO IT'S THING 
+    return () => {
+      dispatch(pauseGame(getRemainingTimeRef.current)); // dont put this in if statement, because will cause disrepancies between time sometimes
+    };
+  }, [location.pathname]);
 
   const handleTileClick = (position: Position) => {
     if (firstSelectedTile) {
@@ -81,7 +107,7 @@ const GameScreen = () => {
             gameId,
             LoggedUserToken,
             score,
-            remainingTime
+            getRemainingTime
           )
         );
       } else console.log("cannot move");
@@ -97,10 +123,8 @@ const GameScreen = () => {
     const board = getBoard();
     // Generate a new random time interval
     const newTimeAllocated = randomIntFromInterval(60, 290);
+    dispatch(startNewGame(board, LoggedUserToken, newTimeAllocated));
     setRemainingTime(newTimeAllocated);
-    dispatch(
-      startNewGame(board, LoggedUserToken, newTimeAllocated, Date.now())
-    );
     // Reset the selected tile when starting a new game
     setFirstSelectedTile(null);
   };
@@ -134,7 +158,7 @@ const GameScreen = () => {
     >
       <Button
         className="button-64"
-        onClick={() => dispatch(pauseGame(startTime, totalTime))}
+        onClick={() => dispatch(pauseGame(getRemainingTime))}
         style={{
           marginBottom: "2rem",
           width: "16rem",
@@ -158,7 +182,7 @@ const GameScreen = () => {
 
       {/* Conditionally render EndGame */}
       {isEnd && !isGameRunning && (
-        <EndGame score={score} time={totalTime}></EndGame>
+        <EndGame score={score} time={allocatedTime}></EndGame>
       )}
 
       {/* MENU */}

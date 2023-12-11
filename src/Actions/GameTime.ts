@@ -2,12 +2,9 @@
 
 import { Dispatch } from "redux";
 
-export const pauseGame = (startTime:number, totalTime:number) => {
+export const pauseGame = (remainingTime:number) => {
     return (dispatch: Dispatch) => {
-      const now = Date.now();
-      const elapsed = (now - startTime) / 1000; 
-      const remainingTime = Math.max(totalTime - elapsed, 0); 
-      dispatch({ type: 'PAUSE_GAME', payload: { remainingTime } }); // Save remaining time
+      dispatch({ type: 'PAUSE_GAME', payload: remainingTime }); 
     };
   };
   
@@ -16,4 +13,10 @@ export const resumeGame = () => {
       dispatch({ type: 'RESUME_GAME' });
     };
   };
+
+export const updateTime = (remainingTime:number) => {
+  return (dispatch: Dispatch) => {
+    dispatch({ type: 'UPDATE_TIME', payload: remainingTime });
+  };
+};
   
