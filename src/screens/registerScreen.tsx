@@ -2,7 +2,6 @@ import { SyntheticEvent, useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FormContainer from "../components/formContainer";
 import { register, setError } from "../thunks/userThunk";
 import { RootState } from "../store";
 import { AppDispatch } from "../store";

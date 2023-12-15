@@ -8,6 +8,7 @@ import {
   USER_REGISTER_REQ,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_LOGOUT_FAIL,
 } from "../constants/userConstants";
 import { RootState } from "../store";
 
@@ -31,12 +32,18 @@ export const login =
       const data = await response.json();
       const userData = { token: data.token, userId: data.userId };
 
-      dispatch({
-        type: USER_LOGIN_SUCCESS,
-        payload: userData,
-      });
+      if (response.ok) {
+        // localStorage.setItem("tokken", userData.token);
+        // localStorage.setItem("userId", userData.userId);
+        // localStorage.setItem("logged", JSON.stringify(true));
 
-      // localStorage.setItem("userInfo", JSON.stringify(userData));
+        dispatch({
+          type: USER_LOGIN_SUCCESS,
+          payload: userData,
+        });
+      } else {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
     } catch (error: any) {
       dispatch({
         type: USER_LOGIN_FAIL,
@@ -93,15 +100,29 @@ export const setError = (error: String) => async (dispatch: Dispatch) => {
 export const logout =
   (): ThunkAction<void, RootState, unknown, Action<string>> =>
   async (dispatch, getState) => {
-    const token: any = getState().loginReducer?.token;
-    localStorage.removeItem("userInfo");
-    dispatch({ type: USER_LOGOUT });
-
-    await fetch(
-      `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+    try {
+      const token: any = getState().loginReducer?.token;
+      const response = await fetch(
+        `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (response.ok) {
+        // localStorage.clear(); // clear local storage
+        dispatch({ type: USER_LOGOUT });
+      } else {
+        // Handle non-successful responses
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    );
+    } catch (error: any) {
+      dispatch({
+        type: USER_LOGOUT_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
   };

@@ -2,7 +2,6 @@ import { SyntheticEvent, useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FormContainer from "../components/formContainer";
 import { login } from "../thunks/userThunk";
 import { RootState } from "../store";
 import { AppDispatch } from "../store";
@@ -41,43 +40,41 @@ const LoginScreen = () => {
 
   return (
     <div className="profile-container">
-      <FormContainer>
-        <h2 className="profile-title">Login</h2>
+      <h2 className="profile-title">Login</h2>
 
-        {error && (
-          <div style={{ color: "red", marginBottom: "1rem" }}>
-            {" "}
-            {interpretErrorMessage(error)}{" "}
-          </div>
-        )}
-        <Form onSubmit={submitHandler} className="profile-form">
-          <Form.Group controlId="username" className="profile-form">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="string"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.currentTarget.value)}
-              className="profile-input"
-            />
-          </Form.Group>
+      {error && (
+        <div style={{ color: "red", marginBottom: "1rem" }}>
+          {" "}
+          {interpretErrorMessage(error)}{" "}
+        </div>
+      )}
+      <Form onSubmit={submitHandler} className="profile-form">
+        <Form.Group controlId="username" className="profile-form">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="string"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.currentTarget.value)}
+            className="profile-input"
+          />
+        </Form.Group>
 
-          <Form.Group controlId="password" className="profile-form">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              className="profile-input"
-            />
-          </Form.Group>
+        <Form.Group controlId="password" className="profile-form">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.currentTarget.value)}
+            className="profile-input"
+          />
+        </Form.Group>
 
-          <Button variant="primary" type="submit" className="profile-button">
-            Login
-          </Button>
-        </Form>
-      </FormContainer>
+        <Button variant="primary" type="submit" className="profile-button">
+          Login
+        </Button>
+      </Form>
     </div>
   );
 };
