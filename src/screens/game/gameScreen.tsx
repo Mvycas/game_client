@@ -67,12 +67,12 @@ const GameScreen = () => {
     "total time" + allocatedTime + "remainingTime" + getRemainingTime
   );
   useEffect(() => {
-    let timerId: any;
+    let timer: any;
     if (isGameRunning) {
-      timerId = setInterval(() => {
+      timer = setInterval(() => {
         setRemainingTime((prevRemainingTime: number) => {
           if (prevRemainingTime <= 0) {
-            clearInterval(timerId);
+            clearInterval(timer);
             dispatch(endGame(gameId, LoggedUserToken));
             return 0; // Ensure the remaining time doesn't go negative
           }
@@ -81,7 +81,7 @@ const GameScreen = () => {
       }, 1000);
     }
     return () => {
-      clearInterval(timerId);
+      clearInterval(timer);
     };
   }, [isGameRunning, dispatch, gameId, LoggedUserToken, location.pathname]);
   // Whenever these [] changed, useeffect fires // THEORY!!!!!
@@ -89,7 +89,7 @@ const GameScreen = () => {
   useEffect(() => {
     // if (location.pathname === "/" && wasGamePaused) {
     //   dispatch(resumeGame());
-    // } /// HAVE RESUME BUTTON DO IT'S THING 
+    // } /// HAVE RESUME BUTTON DO IT'S THING
     return () => {
       dispatch(pauseGame(getRemainingTimeRef.current)); // dont put this in if statement, because will cause disrepancies between time sometimes
     };
