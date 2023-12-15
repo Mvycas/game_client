@@ -6,6 +6,7 @@ import FormContainer from "../components/formContainer";
 import { register, setError } from "../thunks/userThunk";
 import { RootState } from "../store";
 import { AppDispatch } from "../store";
+import "./formStyle.css";
 
 const RegisterScreen = () => {
   const [username, setUsername] = useState("");
@@ -56,49 +57,55 @@ const RegisterScreen = () => {
   };
 
   return (
-    <FormContainer>
-      <h1>Sign Up</h1>
+    <div className="profile-container">
+      <h2 className="profile-title">Sign Up</h2>
 
       {error && (
-        <div style={{ color: "red" }}> {interpretErrorMessage(error)} </div>
+        <div style={{ color: "red", marginBottom: "1rem" }}>
+          {" "}
+          {interpretErrorMessage(error)}{" "}
+        </div>
       )}
 
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="username" className="my-3">
+      <Form onSubmit={submitHandler} className="profile-form">
+        <Form.Group controlId="username" className="profile-form">
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="string"
             placeholder="Username"
             value={username}
             onChange={handleUsernameChange}
+            className="profile-input"
           />
         </Form.Group>
 
-        <Form.Group controlId="password" className="my-3">
+        <Form.Group controlId="password" className="profile-form">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.currentTarget.value)}
+            className="profile-input"
           />
         </Form.Group>
 
-        <Form.Group controlId="confirmPassword" className="my-3">
+        <Form.Group controlId="confirmPassword" className="profile-form">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.currentTarget.value)}
+            className="profile-input"
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="my-3">
+        <Button variant="primary" type="submit" className="profile-button">
           sign up!
         </Button>
       </Form>
-    </FormContainer>
+    </div>
   );
 };
 

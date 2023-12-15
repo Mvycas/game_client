@@ -18,11 +18,6 @@ const App = () => {
           <Routes>
             {/* <Route path="*" element={<PageNotFound />} /> */}
             <Route path="/login" element={<LoginScreen />} />
-            {/* <Route path="/" element={
-              <ProtectedRoute>
-                <GameScreen />
-              </ProtectedRoute>
-            } /> */}
             <Route path="/" element={<GameScreen />} />
             <Route path="/signup" element={<RegisterScreen />} />
           </Routes>
