@@ -26,7 +26,7 @@ const initialState: GameState = {
     isRunning: false, // is game running or finished? in server it would be this prop "Completed"
     isEnd: false,
     error: "",
-    gameId: -1,
+    gameId: 0,
     allocatedTime: 0,
     remainingTime: 0,
     isPaused: false,

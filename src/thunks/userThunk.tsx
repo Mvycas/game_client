@@ -102,20 +102,21 @@ export const logout =
   async (dispatch, getState) => {
     try {
       const token: any = getState().loginReducer?.token;
-      const response = await fetch(
-        `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const logoutResponse = await fetch(
+          `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        if (logoutResponse.ok) {
+          // localStorage.clear(); // Uncomment if you want to clear local storage
+          dispatch({ type: USER_LOGOUT });
+        } else {
+          // Handle non-successful logout response
+          throw new Error(`Logout failed! Status: ${logoutResponse.status}`);
         }
-      );
-      if (response.ok) {
-        // localStorage.clear(); // clear local storage
-        dispatch({ type: USER_LOGOUT });
-      } else {
-        // Handle non-successful responses
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
     } catch (error: any) {
       dispatch({
         type: USER_LOGOUT_FAIL,

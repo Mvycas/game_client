@@ -84,14 +84,12 @@ const GameScreen = () => {
       clearInterval(timer);
     };
   }, [isGameRunning, dispatch, gameId, LoggedUserToken, location.pathname]);
-  // Whenever these [] changed, useeffect fires // THEORY!!!!!
 
   useEffect(() => {
-    // if (location.pathname === "/" && wasGamePaused) {
-    //   dispatch(resumeGame());
-    // } /// HAVE RESUME BUTTON DO IT'S THING
     return () => {
-      dispatch(pauseGame(getRemainingTimeRef.current)); // dont put this in if statement, because will cause disrepancies between time sometimes
+      dispatch(updateTime(getRemainingTimeRef.current));
+      dispatch(pauseGame(getRemainingTimeRef.current));
+      // FOR LOGOUT DISPATCH SAVE BOARD FIRST. AND THEN add HERE A dispatch for updating time and send recent time when navigating out so that if after navigating out he decides to logout, it dispatches latest time together with logout // dont put this in if statement, because will cause disrepancies between time sometimes
     };
   }, [location.pathname]);
 

@@ -9,8 +9,6 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { TextField } from "@mui/material";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../thunks/userThunk";
@@ -20,13 +18,29 @@ import { PiGameController } from "react-icons/pi";
 
 import TheatersIcon from "@mui/icons-material/Theaters";
 import { TiUserAdd } from "react-icons/ti";
-import { IoMdLogIn } from "react-icons/io";
+import { saveBoard } from "../thunks/gameThunk";
 
 const settings = ["Account", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
+  );
+
+  const remainingTime: any = useSelector(
+    (state: RootState) => state.boardReducer.remainingTime
+  );
+  const gameId: any = useSelector(
+    (state: RootState) => state.boardReducer.gameId
+  );
+  const score: any = useSelector(
+    (state: RootState) => state.boardReducer.board.score
+  );
+  const randomColorArrangement: any = useSelector(
+    (state: RootState) => state.boardReducer.board
+  );
+  const userToken: any = useSelector(
+    (state: RootState) => state.loginReducer.token
   );
 
   // function stringAvatar(name: string) {
@@ -86,7 +100,22 @@ function ResponsiveAppBar() {
     }
     if (setting === "Logout") {
       handleCloseUserMenu();
-      dispatch(logout());
+      dispatch(
+        saveBoard(
+          randomColorArrangement,
+          gameId,
+          userToken,
+          score,
+          remainingTime
+        )
+      )
+        .then(() => {
+          // Dispatch logout only if saveBoard was successful
+          dispatch(logout());
+        })
+        .catch((error) => {
+          console.error("Failed to save board:", error); // better to display msg to user in UI, not in console.
+        });
     }
   }
 
@@ -223,3 +252,6 @@ function ResponsiveAppBar() {
   );
 }
 export default ResponsiveAppBar;
+function getState() {
+  throw new Error("Function not implemented.");
+}
