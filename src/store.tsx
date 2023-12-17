@@ -3,12 +3,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import userLoginReducer from "./reducers/userReducer";
 import registerReducer from "./reducers/registerReducer";
-import boardReducer from "./reducers/boardReducer";
+import gameReducer from "./reducers/gameReducer";
 
 const reducers = combineReducers({
   loginReducer: userLoginReducer,
   registerReducer,
-  boardReducer,
+  gameReducer,
 });
 
 // const initialState = {};

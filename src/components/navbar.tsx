@@ -28,16 +28,16 @@ function ResponsiveAppBar() {
   );
 
   const remainingTime: any = useSelector(
-    (state: RootState) => state.boardReducer.remainingTime
+    (state: RootState) => state.gameReducer.remainingTime
   );
   const gameId: any = useSelector(
-    (state: RootState) => state.boardReducer.gameId
+    (state: RootState) => state.gameReducer.gameId
   );
   const score: any = useSelector(
-    (state: RootState) => state.boardReducer.board.score
+    (state: RootState) => state.gameReducer.board.score
   );
   const randomColorArrangement: any = useSelector(
-    (state: RootState) => state.boardReducer.board
+    (state: RootState) => state.gameReducer.board
   );
   const userToken: any = useSelector(
     (state: RootState) => state.loginReducer.token
@@ -98,7 +98,7 @@ function ResponsiveAppBar() {
       handleCloseUserMenu();
       navigate("/account/edit");
     }
-    if (setting === "Logout") {
+    if (setting === "Logout") { //SHOULD UPDATE REMAINING TIME HERE
       handleCloseUserMenu();
       dispatch(
         saveBoard(

@@ -4,6 +4,9 @@ import {
   GAME_STARTED,
   REQ_FAILED,
   GAME_END,
+  GET_UNFINISHED_GAME_SUCCESS,
+  GET_UNFINISHED_GAME_FAILED,
+  REQ_UNFINISHED_GAME,
 } from "../constants/gameConstants";
 
 export const saveBoard = (
@@ -30,7 +33,7 @@ export const saveBoard = (
       if (response.ok) {
         dispatch({
           type: SAVE_BOARD,
-          payload: {randomColorArrangement, timeLeft}
+          payload: { randomColorArrangement, timeLeft },
         });
       } else {
         throw new Error("Failed to save board");
@@ -105,5 +108,46 @@ export const startNewGame =
         type: REQ_FAILED,
         payload: error.message || "Unknown error occurred",
       });
+    }
+  };
+
+export const getIncompleteGamesByUserId =
+  (userId: any, userToken: any) => async (dispatch: Dispatch) => {
+    try {
+      //Retrieve the list of games
+      const response = await fetch(
+        `http://localhost:9090/games?token=${userToken}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch games");
+      }
+
+      const games = await response.json();
+
+      const incompleteGame = games.find(
+        (game: any) => !game.completed && game.user === userId
+      );
+
+      if (incompleteGame) {
+        dispatch({
+          type: GET_UNFINISHED_GAME_SUCCESS,
+          payload: {
+            gameId: incompleteGame.id,
+            remainingTime: incompleteGame.timeLeft,
+            score: incompleteGame.score,
+          },
+        });
+      } else {
+        // Handle the case where no incomplete games are found
+      }
+    } catch (error) {
+      console.error("Error retrieving incomplete game:", error);
     }
   };

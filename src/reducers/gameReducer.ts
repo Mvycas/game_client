@@ -1,4 +1,4 @@
-import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME, UPDATE_TIME } from '../constants/gameConstants';
+import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME, UPDATE_TIME, REQ_UNFINISHED_GAME, GET_UNFINISHED_GAME_SUCCESS, GET_UNFINISHED_GAME_FAILED } from '../constants/gameConstants';
 
 interface GameBoard {
     w: number;       // Width of the board
@@ -58,6 +58,9 @@ const boardReducer = (state: GameState = initialState, action: any) => {
       return {...state, isPaused: false, isRunning: true};
     case UPDATE_TIME:
       return {...state, remainingTime: action.payload};
+    case GET_UNFINISHED_GAME_SUCCESS:
+      return{...state, isPaused: true, gameId: action.payload.gameId, allocatedTime:action.payload.remainingTime, remainingTime: action.payload.remainingTime, score: action.payload.score} //should get allocated time as well, but we need to send it with save board then
+
     default:
       return state;
   }

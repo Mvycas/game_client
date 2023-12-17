@@ -18,7 +18,7 @@ const GameScreen = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const remainingTimeRedux = useSelector(
-    (state: RootState) => state.boardReducer.remainingTime
+    (state: RootState) => state.gameReducer.remainingTime
   );
   const [getRemainingTime, setRemainingTime] = useState(remainingTimeRedux);
 
@@ -29,10 +29,10 @@ const GameScreen = () => {
   }, [getRemainingTime]);
 
   const allocatedTime = useSelector(
-    (state: RootState) => state.boardReducer.allocatedTime
+    (state: RootState) => state.gameReducer.allocatedTime
   );
   const wasGamePaused = useSelector(
-    (state: RootState) => state.boardReducer.isPaused
+    (state: RootState) => state.gameReducer.isPaused
   );
 
   const isLoggedIn = useSelector(
@@ -43,23 +43,26 @@ const GameScreen = () => {
   );
 
   const currentBoardArrangement = useSelector(
-    (state: RootState) => state.boardReducer.board
+    (state: RootState) => state.gameReducer.board
   );
 
   const isGameRunning = useSelector(
-    (state: RootState) => state.boardReducer.isRunning
+    (state: RootState) => state.gameReducer.isRunning
   );
-  const isEnd = useSelector((state: RootState) => state.boardReducer.isEnd);
+  const isEnd = useSelector((state: RootState) => state.gameReducer.isEnd);
 
   const score = useSelector(
-    (state: RootState) => state.boardReducer.board.score
+    (state: RootState) => state.gameReducer.board.score
   );
-  const gameId = useSelector((state: RootState) => state.boardReducer.gameId);
+  const gameId = useSelector((state: RootState) => state.gameReducer.gameId);
 
   // State to track the first selected tile position
   const [firstSelectedTile, setFirstSelectedTile] = useState<Position | null>(
     null
   );
+  console.log(allocatedTime);
+  console.log(score);
+  console.log(gameId);
 
   const location = useLocation();
 
@@ -70,13 +73,13 @@ const GameScreen = () => {
     let timer: any;
     if (isGameRunning) {
       timer = setInterval(() => {
-        setRemainingTime((prevRemainingTime: number) => {
-          if (prevRemainingTime <= 0) {
+        setRemainingTime(() => {
+          if (getRemainingTimeRef.current <= 0) {
             clearInterval(timer);
             dispatch(endGame(gameId, LoggedUserToken));
             return 0; // Ensure the remaining time doesn't go negative
           }
-          return prevRemainingTime - 1;
+          return setRemainingTime(getRemainingTimeRef.current - 1);
         });
       }, 1000);
     }
