@@ -3,10 +3,12 @@ import {
     USER_LOGIN_SUCCESS,
     USER_LOGIN_FAIL,
     USER_LOGOUT,
+    USER_LOGOUT_REQ,
   } from '../constants/userConstants';
   
   const initialState = {
     isLoggedIn: false,
+    logoutReq: false,
     userData: null,
     token: null,
     userId: null,
@@ -16,6 +18,8 @@ import {
   // Here we are taking two props, state and action. Reducer will take the current state and return a new one according to the triggered action
   const userLoginReducer = (state = initialState, action:any) => {
     switch (action.type) {
+      case USER_LOGOUT_REQ: 
+        return { ...state, logoutReq: true };
       case USER_LOGIN_REQ:
         return { ...state, isLoggedIn: false, error: null };
       case USER_LOGIN_SUCCESS:
@@ -25,6 +29,8 @@ import {
         return { ...state, isLoggedIn: false, error: action.payload };
       case USER_LOGOUT:
         return { ...initialState };
+        // case USER_LOGOUT_FAILED:
+        // return { ...initialState,  logoutReq: false};
       default:
         return state;
     }

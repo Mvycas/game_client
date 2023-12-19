@@ -11,7 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../thunks/userThunk";
+import { logout, logoutReq } from "../thunks/userThunk";
 import { RootState, AppDispatch } from "../store";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import { PiGameController } from "react-icons/pi";
@@ -101,6 +101,7 @@ function ResponsiveAppBar() {
     if (setting === "Logout") {
       //SHOULD UPDATE REMAINING TIME HERE
       handleCloseUserMenu();
+      dispatch(logoutReq());
       dispatch(
         saveBoard(
           randomColorArrangement,

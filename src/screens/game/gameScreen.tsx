@@ -49,6 +49,10 @@ const GameScreen = () => {
     (state: RootState) => state.gameReducer.board
   );
 
+  const logoutReq = useSelector(
+    (state: RootState) => state.loginReducer.logoutReq
+  );
+
   const isGameRunning = useSelector(
     (state: RootState) => state.gameReducer.isRunning
   );
@@ -63,6 +67,9 @@ const GameScreen = () => {
   const [firstSelectedTile, setFirstSelectedTile] = useState<Position | null>(
     null
   );
+
+  const shouldRenderEndGame = isEnd && !isGameRunning;
+
   console.log("remainingTime local state ", getRemainingTimeRef.current);
   console.log("remainingTimeRedux ", remainingTimeRedux);
   console.log(gameId);
@@ -72,6 +79,7 @@ const GameScreen = () => {
   console.log(
     "total time" + allocatedTime + "remainingTime" + getRemainingTime
   );
+
   useEffect(() => {
     let timer: any;
     if (isGameRunning) {
@@ -95,30 +103,44 @@ const GameScreen = () => {
     return () => {
       dispatch(updateTime(getRemainingTimeRef.current));
       dispatch(pauseGame(getRemainingTimeRef.current));
-      // FOR LOGOUT DISPATCH SAVE BOARD FIRST. AND THEN add HERE A dispatch for updating time and send recent time when navigating out so that if after navigating out he decides to logout, it dispatches latest time together with logout // dont put this in if statement, because will cause disrepancies between time sometimes
     };
-  }, [location.pathname]);
+  }, [location.pathname, logoutReq]); // logoutReq - to track when the logout req is being issued, and then dispatch the latest remaining time value to global store
+
+  const isValidMove = (
+    currentBoardArrangement: any,
+    firstSelectedTile: any,
+    position: any
+  ) => {
+    // Logic for checking a valid move
+    return canMove(currentBoardArrangement, firstSelectedTile, position);
+  };
+
+  const saveUpdatedBoard = (
+    board: any,
+    gameId: any,
+    token: any,
+    score: any,
+    remainingTime: any
+  ) => {
+    // Logic for dispatching saveBoard action
+    dispatch(saveBoard(board, gameId, token, score, remainingTime));
+  };
 
   const handleTileClick = (position: Position) => {
     if (firstSelectedTile) {
-      // Dispatch the action to save the updated board state
-      if (canMove(currentBoardArrangement, firstSelectedTile, position)) {
-        console.log(score);
-        dispatch(
-          saveBoard(
-            moveTile(firstSelectedTile, position, currentBoardArrangement)
-              .board,
-            gameId,
-            LoggedUserToken,
-            score,
-            getRemainingTime
-          )
+      if (isValidMove(currentBoardArrangement, firstSelectedTile, position)) {
+        saveUpdatedBoard(
+          moveTile(firstSelectedTile, position, currentBoardArrangement).board,
+          gameId,
+          LoggedUserToken,
+          score,
+          getRemainingTime
         );
-      } else console.log("cannot move");
-      // Reset firstSelectedTile after attempting the move
+      } else {
+        console.log("cannot move");
+      }
       setFirstSelectedTile(null);
     } else {
-      // If no tile is selected, set this as the firstSelectedTile
       setFirstSelectedTile(position);
     }
   };
@@ -185,7 +207,7 @@ const GameScreen = () => {
       </Button>
 
       {/* Conditionally render EndGame */}
-      {isEnd && !isGameRunning && (
+      {shouldRenderEndGame && (
         <EndGame score={score} time={allocatedTime}></EndGame>
       )}
 

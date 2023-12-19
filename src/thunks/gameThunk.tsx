@@ -7,6 +7,7 @@ import {
   GET_UNFINISHED_GAME_SUCCESS,
   GET_UNFINISHED_GAME_FAILED,
   REQ_UNFINISHED_GAME,
+  SAVE_BOARD_REQ
 } from "../constants/gameConstants";
 
 export const saveBoard = (
@@ -18,6 +19,9 @@ export const saveBoard = (
 ) => {
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({
+        type: SAVE_BOARD_REQ,
+      });
       // Send a PATCH request to the server to update the game
       const response = await fetch(
         `http://localhost:9090/games/${gameId}?token=${userToken}`,

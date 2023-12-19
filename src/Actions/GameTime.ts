@@ -19,4 +19,6 @@ export const updateTime = (remainingTime:number) => {
     dispatch({ type: 'UPDATE_TIME', payload: remainingTime });
   };
 };
+
+
   
