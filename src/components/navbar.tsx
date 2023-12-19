@@ -98,7 +98,8 @@ function ResponsiveAppBar() {
       handleCloseUserMenu();
       navigate("/account/edit");
     }
-    if (setting === "Logout") { //SHOULD UPDATE REMAINING TIME HERE
+    if (setting === "Logout") {
+      //SHOULD UPDATE REMAINING TIME HERE
       handleCloseUserMenu();
       dispatch(
         saveBoard(

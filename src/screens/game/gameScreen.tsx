@@ -25,14 +25,17 @@ const GameScreen = () => {
   const getRemainingTimeRef = useRef(getRemainingTime);
 
   useEffect(() => {
+    // Update local state when remainingTimeRedux changes
+    // after logging in and fetching previous game data to the store
+    setRemainingTime(remainingTimeRedux);
+  }, [remainingTimeRedux]);
+
+  useEffect(() => {
     getRemainingTimeRef.current = getRemainingTime;
   }, [getRemainingTime]);
 
   const allocatedTime = useSelector(
     (state: RootState) => state.gameReducer.allocatedTime
-  );
-  const wasGamePaused = useSelector(
-    (state: RootState) => state.gameReducer.isPaused
   );
 
   const isLoggedIn = useSelector(
@@ -60,8 +63,8 @@ const GameScreen = () => {
   const [firstSelectedTile, setFirstSelectedTile] = useState<Position | null>(
     null
   );
-  console.log(allocatedTime);
-  console.log(score);
+  console.log("remainingTime local state ", getRemainingTimeRef.current);
+  console.log("remainingTimeRedux ", remainingTimeRedux);
   console.log(gameId);
 
   const location = useLocation();
@@ -73,20 +76,20 @@ const GameScreen = () => {
     let timer: any;
     if (isGameRunning) {
       timer = setInterval(() => {
-        setRemainingTime(() => {
-          if (getRemainingTimeRef.current <= 0) {
+        setRemainingTime((prevTime: number) => {
+          if (prevTime <= 0) {
             clearInterval(timer);
             dispatch(endGame(gameId, LoggedUserToken));
             return 0; // Ensure the remaining time doesn't go negative
           }
-          return setRemainingTime(getRemainingTimeRef.current - 1);
+          return prevTime - 1;
         });
       }, 1000);
     }
     return () => {
       clearInterval(timer);
     };
-  }, [isGameRunning, dispatch, gameId, LoggedUserToken, location.pathname]);
+  }, [isGameRunning]);
 
   useEffect(() => {
     return () => {

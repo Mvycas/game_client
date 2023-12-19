@@ -59,7 +59,7 @@ const boardReducer = (state: GameState = initialState, action: any) => {
     case UPDATE_TIME:
       return {...state, remainingTime: action.payload};
     case GET_UNFINISHED_GAME_SUCCESS:
-      return{...state, isPaused: true, gameId: action.payload.gameId, allocatedTime:action.payload.remainingTime, remainingTime: action.payload.remainingTime, score: action.payload.score} //should get allocated time as well, but we need to send it with save board then
+      return{...initialState, isPaused: true, gameId: action.payload.gameId, remainingTime: action.payload.remainingTime, score: action.payload.score} //should get allocated time as well, but we need to send it with save board then
 
     default:
       return state;
