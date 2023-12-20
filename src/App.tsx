@@ -1,9 +1,9 @@
 import React from "react";
-import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginScreen from "./screens/loginScreen";
 import GameScreen from "./screens/game/gameScreen";
 import ScoreboardScreen from "./screens/scoreboardScreen";
+import Profile from "./screens/profile/profile";
 
 import "./App.css";
 import RegisterScreen from "./screens/registerScreen";
@@ -21,13 +21,21 @@ const App = () => {
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/" element={<GameScreen />} />
             <Route path="/signup" element={<RegisterScreen />} />
-            <Route path="/scoreboard" element={<ScoreboardScreen />} />
 
             <Route
-              path="/account/edit"
+              path="/scoreboard"
               element={
                 <ProtectedRoute>
-                  <RegisterScreen />
+                  <ScoreboardScreen />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/profile/edit"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

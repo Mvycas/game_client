@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { AppDispatch } from "../store";
 import { getScoreboard } from "../thunks/gameThunk";
+import "./scoreboardScreen.css";
 
 const ScoreboardScreen = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,32 +21,17 @@ const ScoreboardScreen = () => {
   );
 
   useEffect(() => {
-    // Assume this action fetches and sets the scores in the state
     dispatch(getScoreboard(currentUserUsername, currentUserTokken));
   }, [currentUserTokken, currentUserUsername, dispatch]);
 
-  // Define your handle functions and any other component logic here
-
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "30px" }}>
-      {/* Your game logic here... */}
-
-      {/* Logged-in User's Top Scores */}
+    <div className="scoreboard">
       {userScores.length > 0 && (
-        <div style={{ marginBottom: "2rem" }}>
-          <h3 style={{ color: "white" }}>My Top Scores</h3>
-          <div
-            style={{
-              color: "white",
-
-              gap: "10px",
-            }}
-          >
+        <div className="section">
+          <h3 className="heading">My Top Scores</h3>
+          <div className="userScore">
             {userScores.map((game: any, index: any) => (
-              <div
-                key={index}
-                style={{ padding: "10px", border: "1px solid white" }}
-              >
+              <div key={index} className="userScoreItem">
                 {game.score}
               </div>
             ))}
@@ -53,16 +39,14 @@ const ScoreboardScreen = () => {
         </div>
       )}
 
-      {/* Space between the user scores and top scores */}
-      <div style={{ height: "2rem", color: "white" }} />
+      <div className="section" />
 
-      {/* Overall Top Scores */}
-      <div style={{ marginBottom: "2rem", color: "white" }}>
-        <h3>Top Scores</h3>
-        <ol>
+      <div className="section">
+        <h3 className="heading">Top Scores</h3>
+        <ol className="scoreList">
           {topScores.map((game: any, index: any) => (
-            <li key={index}>
-              {game.username}: {game.score}
+            <li key={index} className="scoreItem">
+              {game.username} - {game.score}
             </li>
           ))}
         </ol>

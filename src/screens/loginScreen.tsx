@@ -16,8 +16,7 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const error = useSelector((state: RootState) => state.loginReducer.error);
-  // const token = useSelector((state: RootState) => state.loginReducer.token);
-  // const userId = useSelector((state: RootState) => state.loginReducer.userId);
+
   const isLoggedIn = useSelector(
     (state: RootState) => state.loginReducer.isLoggedIn
   );
@@ -44,14 +43,6 @@ const LoginScreen = () => {
       console.error("Login failed:", error);
     });
   };
-
-  // Use useEffect to react to changes in the login state
-  // useEffect(() => {
-  //   if (isLoggedIn && userId != null && token) {
-  //     // Now that we have a confirmed login, dispatch the getIncompleteGames action
-  //     dispatch(getIncompleteGamesByUserId(userId, token));
-  //   }
-  // }, [dispatch, isLoggedIn, userId, token]);
 
   return (
     <div className="profile-container">

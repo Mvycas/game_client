@@ -9,7 +9,6 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGOUT_FAIL,
-  USER_LOGOUT_REQ,
 } from "../constants/userConstants";
 import { RESET_GAME_STATE } from "../constants/gameConstants";
 
@@ -25,7 +24,6 @@ export const login =
       const response = await fetch("http://localhost:9090/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // credentials: "include",
         body: JSON.stringify({
           username,
           password,
@@ -104,7 +102,6 @@ export const logout =
   (): ThunkAction<void, RootState, unknown, Action<string>> =>
   async (dispatch, getState) => {
     try {
-      dispatch({ type: USER_LOGOUT_REQ });
       const token: any = getState().loginReducer?.token;
       const logoutResponse = await fetch(
         `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,

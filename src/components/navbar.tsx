@@ -6,7 +6,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,31 +13,23 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../thunks/userThunk";
 import { RootState, AppDispatch } from "../store";
 import { BiSolidLogInCircle } from "react-icons/bi";
-import { PiGameController } from "react-icons/pi";
+import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
+import { TiThMenu } from "react-icons/ti";
 
-import TheatersIcon from "@mui/icons-material/Theaters";
 import { TiUserAdd } from "react-icons/ti";
-import { endGame, saveBoard } from "../thunks/gameThunk";
+import { endGame } from "../thunks/gameThunk";
 
-const settings = ["Account", "Scoreboard", "Logout"];
+const settings = ["Game", "Scoreboard", "Account", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
 
-  const remainingTime: any = useSelector(
-    (state: RootState) => state.gameReducer.remainingTime
-  );
   const gameId: any = useSelector(
     (state: RootState) => state.gameReducer.gameId
   );
-  const score: any = useSelector(
-    (state: RootState) => state.gameReducer.board.score
-  );
-  const randomColorArrangement: any = useSelector(
-    (state: RootState) => state.gameReducer.board
-  );
+
   const userToken: any = useSelector(
     (state: RootState) => state.loginReducer.token
   );
@@ -61,16 +52,18 @@ function ResponsiveAppBar() {
   function handleMenuClick(setting: string): void {
     if (setting === "Account") {
       handleCloseUserMenu();
-      navigate("/account/edit");
+      navigate("/profile/edit");
     }
     if (setting === "Scoreboard") {
       handleCloseUserMenu();
       navigate("/scoreboard");
     }
-    if (setting === "Logout") {
-      //SHOULD UPDATE REMAINING TIME HERE
+    if (setting === "Game") {
       handleCloseUserMenu();
-      // dispatch(logoutReq());
+      navigate("/");
+    }
+    if (setting === "Logout") {
+      handleCloseUserMenu();
       dispatch(endGame(gameId, userToken))
         .then(() => {
           // Dispatch logout only if endGame was successful
@@ -93,7 +86,9 @@ function ResponsiveAppBar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <TheatersIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <VideogameAssetIcon
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -103,16 +98,18 @@ function ResponsiveAppBar() {
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".1rem",
+              letterSpacing: ".05rem",
               color: "inherit",
               textDecoration: "none",
             }}
           >
-            MATCH SAGA
+            MATCH3
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
-          <PiGameController />
+          <VideogameAssetIcon
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+          />
           <Typography
             variant="h5"
             noWrap
@@ -139,11 +136,7 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  {isLoggedIn ? (
-                    <Avatar src="/broken-image.jpg" />
-                  ) : (
-                    <Avatar src="/broken-image.jpg" />
-                  )}
+                  {isLoggedIn && <TiThMenu />}
                 </IconButton>
               </Tooltip>
               <Menu

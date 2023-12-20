@@ -5,8 +5,6 @@ import {
   REQ_FAILED,
   GAME_END,
   SAVE_BOARD_REQ,
-  GET_SCOREBOARD_SUCCESS,
-  GET_SCOREBOARD_FAILED,
 } from "../constants/gameConstants";
 
 export const saveBoard = (
@@ -23,7 +21,6 @@ export const saveBoard = (
       dispatch({
         type: SAVE_BOARD_REQ,
       });
-      // Send a PATCH request to the server to update the game
       const response = await fetch(
         `http://localhost:9090/games/${gameId}?token=${userToken}`,
         {
@@ -79,7 +76,7 @@ export const endGame = (gameId: number, userToken: string) => {
       }
     } catch (error: any) {
       dispatch({
-        type: REQ_FAILED, // Adjust type based on your action types
+        type: REQ_FAILED, 
         payload: error.message || "Unknown error occurred",
       });
     }

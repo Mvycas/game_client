@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -238,7 +239,15 @@ const GameScreen = () => {
                   Create New Game
                 </Button>
               ) : (
-                <p>You need to log in to start a new game.</p>
+                <p
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  You need to log in to start a new game.
+                </p>
               )}
             </div>
           </div>
