@@ -11,6 +11,8 @@ import {
   USER_LOGOUT_FAIL,
   USER_LOGOUT_REQ,
 } from "../constants/userConstants";
+import { RESET_GAME_STATE } from "../constants/gameConstants";
+
 import { RootState } from "../store";
 
 export const login =
@@ -114,6 +116,7 @@ export const logout =
 
       if (logoutResponse.ok) {
         // localStorage.clear(); // Uncomment if you want to clear local storage
+        dispatch({ type: RESET_GAME_STATE });
         dispatch({ type: USER_LOGOUT });
       } else {
         // Handle non-successful logout response

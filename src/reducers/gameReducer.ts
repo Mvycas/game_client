@@ -1,4 +1,4 @@
-import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME, UPDATE_TIME, REQ_UNFINISHED_GAME, GET_UNFINISHED_GAME_SUCCESS, GET_UNFINISHED_GAME_FAILED } from '../constants/gameConstants';
+import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME, UPDATE_TIME, RESET_GAME_STATE } from '../constants/gameConstants';
 
 interface GameBoard {
     w: number;       // Width of the board
@@ -41,7 +41,7 @@ const initialState: GameState = {
 const boardReducer = (state: GameState = initialState, action: any) => {
   switch (action.type) {
     case GAME_STARTED:
-      return { ...state, isRunning: true, isEnd:false, board: action.payload.randomColorArrangement, 
+      return { ...state, isRunning: true, isPaused: false, isEnd:false, board: action.payload.randomColorArrangement, 
         gameId: action.payload.GameDetails.id,
         remainingTime: action.payload.timeAllocated,
         allocatedTime: action.payload.timeAllocated
@@ -58,9 +58,8 @@ const boardReducer = (state: GameState = initialState, action: any) => {
       return {...state, isPaused: false, isRunning: true};
     case UPDATE_TIME:
       return {...state, remainingTime: action.payload};
-    // case GET_UNFINISHED_GAME_SUCCESS:
-    //   return{...initialState, isPaused: true, gameId: action.payload.gameId, remainingTime: action.payload.remainingTime, score: action.payload.score} //should get allocated time as well, but we need to send it with save board then
-
+    case RESET_GAME_STATE:
+        return {...initialState};
     default:
       return state;
   }

@@ -4,9 +4,6 @@ import {
   GAME_STARTED,
   REQ_FAILED,
   GAME_END,
-  GET_UNFINISHED_GAME_SUCCESS,
-  GET_UNFINISHED_GAME_FAILED,
-  REQ_UNFINISHED_GAME,
   SAVE_BOARD_REQ,
 } from "../constants/gameConstants";
 

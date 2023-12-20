@@ -14,10 +14,7 @@ export const RESUME_GAME = "RESUME_GAME";
 export const PAUSE_GAME = "PAUSE_GAME";
 export const UPDATE_TIME = "UPDATE_TIME";
 export const SAVE_BOARD_REQ = "SAVE_BOARD_REQ";
-
-export const REQ_UNFINISHED_GAME = "REQ_UNFINISHED_GAME";
-export const GET_UNFINISHED_GAME_SUCCESS = "GET_UNFINISHED_GAME_SUCCESS";
-export const GET_UNFINISHED_GAME_FAILED = "GET_UNFINISHED_GAME_FAILED";
+export const RESET_GAME_STATE = "RESET_GAME_STATE";
 
 export const candyColors = {
   white,
