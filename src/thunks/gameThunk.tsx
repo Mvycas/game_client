@@ -7,18 +7,19 @@ import {
   GET_UNFINISHED_GAME_SUCCESS,
   GET_UNFINISHED_GAME_FAILED,
   REQ_UNFINISHED_GAME,
-  SAVE_BOARD_REQ
+  SAVE_BOARD_REQ,
 } from "../constants/gameConstants";
 
 export const saveBoard = (
   randomColorArrangement: any,
   gameId: number,
   userToken: string,
-  score: number,
   timeLeft: number
 ) => {
   return async (dispatch: Dispatch) => {
     try {
+      console.log(randomColorArrangement);
+
       dispatch({
         type: SAVE_BOARD_REQ,
       });
@@ -30,7 +31,11 @@ export const saveBoard = (
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ score, userToken, timeLeft }), //////////////////////////TIME LEFT MY CAUSE ERRORS ON BACKEND
+          body: JSON.stringify({
+            score: randomColorArrangement.score,
+            userToken,
+            timeLeft,
+          }), //////////////////////////TIME LEFT MY CAUSE ERRORS ON BACKEND
         }
       );
 
@@ -115,43 +120,43 @@ export const startNewGame =
     }
   };
 
-export const getIncompleteGamesByUserId =
-  (userId: any, userToken: any) => async (dispatch: Dispatch) => {
-    try {
-      //Retrieve the list of games
-      const response = await fetch(
-        `http://localhost:9090/games?token=${userToken}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+// export const getIncompleteGamesByUserId =
+//   (userId: any, userToken: any) => async (dispatch: Dispatch) => {
+//     try {
+//       //Retrieve the list of games
+//       const response = await fetch(
+//         `http://localhost:9090/games?token=${userToken}`,
+//         {
+//           method: "GET",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch games");
-      }
+//       if (!response.ok) {
+//         throw new Error("Failed to fetch games");
+//       }
 
-      const games = await response.json();
+//       const games = await response.json();
 
-      const incompleteGame = games.find(
-        (game: any) => !game.completed && game.user === userId
-      );
+//       const incompleteGame = games.find(
+//         (game: any) => !game.completed && game.user === userId
+//       );
 
-      if (incompleteGame) {
-        dispatch({
-          type: GET_UNFINISHED_GAME_SUCCESS,
-          payload: {
-            gameId: incompleteGame.id,
-            remainingTime: incompleteGame.timeLeft,
-            score: incompleteGame.score,
-          },
-        });
-      } else {
-        // Handle the case where no incomplete games are found
-      }
-    } catch (error) {
-      console.error("Error retrieving incomplete game:", error);
-    }
-  };
+//       if (incompleteGame) {
+//         dispatch({
+//           type: GET_UNFINISHED_GAME_SUCCESS,
+//           payload: {
+//             gameId: incompleteGame.id,
+//             remainingTime: incompleteGame.timeLeft,
+//             score: incompleteGame.score,
+//           },
+//         });
+//       } else {
+//         // Handle the case where no incomplete games are found
+//       }
+//     } catch (error) {
+//       console.error("Error retrieving incomplete game:", error);
+//     }
+//   };

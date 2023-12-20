@@ -29,8 +29,7 @@ import {
         return { ...state, isLoggedIn: false, error: action.payload };
       case USER_LOGOUT:
         return { ...initialState };
-        // case USER_LOGOUT_FAILED:
-        // return { ...initialState,  logoutReq: false};
+
       default:
         return state;
     }

@@ -11,14 +11,14 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout, logoutReq } from "../thunks/userThunk";
+import { logout } from "../thunks/userThunk";
 import { RootState, AppDispatch } from "../store";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import { PiGameController } from "react-icons/pi";
 
 import TheatersIcon from "@mui/icons-material/Theaters";
 import { TiUserAdd } from "react-icons/ti";
-import { saveBoard } from "../thunks/gameThunk";
+import { endGame, saveBoard } from "../thunks/gameThunk";
 
 const settings = ["Account", "Logout"];
 
@@ -42,46 +42,11 @@ function ResponsiveAppBar() {
   const userToken: any = useSelector(
     (state: RootState) => state.loginReducer.token
   );
-
-  // function stringAvatar(name: string) {
-  //   return {
-  //     children: `${name.split(" ")[0][0]}${
-  //       name.split(" ")[1] ? name.split(" ")[1][0] : ""
-  //     }`,
-  //     sx: {
-  //       bgcolor: stringToColor(name),
-  //     },
-  //   };
-  // }
-
-  // function stringToColor(string: string) {
-  //   let hash = 0;
-  //   let i;
-
-  //   /* Convert string to hash */
-  //   for (i = 0; i < string.length; i += 1) {
-  //     hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  //   }
-
-  //   /* Convert hash to color */
-  //   let color = "#";
-
-  //   for (i = 0; i < 3; i += 1) {
-  //     const value = (hash >> (i * 8)) & 0xff;
-  //     color += `00${value.toString(16)}`.slice(-2);
-  //   }
-
-  //   return color;
-  // }
-
   const navigate = useNavigate();
 
   const isLoggedIn = useSelector(
     (state: RootState) => state.loginReducer.isLoggedIn
   );
-  // const username = useSelector(
-  //   (state: RootState) => state.loginReducer.userData.username
-  // );
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -101,22 +66,14 @@ function ResponsiveAppBar() {
     if (setting === "Logout") {
       //SHOULD UPDATE REMAINING TIME HERE
       handleCloseUserMenu();
-      dispatch(logoutReq());
-      dispatch(
-        saveBoard(
-          randomColorArrangement,
-          gameId,
-          userToken,
-          score,
-          remainingTime
-        )
-      )
+      // dispatch(logoutReq());
+      dispatch(endGame(gameId, userToken))
         .then(() => {
-          // Dispatch logout only if saveBoard was successful
+          // Dispatch logout only if endGame was successful
           dispatch(logout());
         })
         .catch((error) => {
-          console.error("Failed to save board:", error); // better to display msg to user in UI, not in console.
+          console.error("Failed to end GAME:", error); // better to display msg to user in UI, not in console.
         });
     }
   }
@@ -254,6 +211,3 @@ function ResponsiveAppBar() {
   );
 }
 export default ResponsiveAppBar;
-function getState() {
-  throw new Error("Function not implemented.");
-}

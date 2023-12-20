@@ -41,7 +41,7 @@ const initialState: GameState = {
 const boardReducer = (state: GameState = initialState, action: any) => {
   switch (action.type) {
     case GAME_STARTED:
-      return { ...state, isRunning: true, board: action.payload.randomColorArrangement, 
+      return { ...state, isRunning: true, isEnd:false, board: action.payload.randomColorArrangement, 
         gameId: action.payload.GameDetails.id,
         remainingTime: action.payload.timeAllocated,
         allocatedTime: action.payload.timeAllocated
@@ -58,8 +58,8 @@ const boardReducer = (state: GameState = initialState, action: any) => {
       return {...state, isPaused: false, isRunning: true};
     case UPDATE_TIME:
       return {...state, remainingTime: action.payload};
-    case GET_UNFINISHED_GAME_SUCCESS:
-      return{...initialState, isPaused: true, gameId: action.payload.gameId, remainingTime: action.payload.remainingTime, score: action.payload.score} //should get allocated time as well, but we need to send it with save board then
+    // case GET_UNFINISHED_GAME_SUCCESS:
+    //   return{...initialState, isPaused: true, gameId: action.payload.gameId, remainingTime: action.payload.remainingTime, score: action.payload.score} //should get allocated time as well, but we need to send it with save board then
 
     default:
       return state;

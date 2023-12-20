@@ -98,16 +98,11 @@ export const setError = (error: String) => async (dispatch: Dispatch) => {
   });
 };
 
-export const logoutReq = () => {
-  return (dispatch: Dispatch) => {
-    dispatch({ type: USER_LOGOUT_REQ });
-  };
-};
-
 export const logout =
   (): ThunkAction<void, RootState, unknown, Action<string>> =>
   async (dispatch, getState) => {
     try {
+      dispatch({ type: USER_LOGOUT_REQ });
       const token: any = getState().loginReducer?.token;
       const logoutResponse = await fetch(
         `http://localhost:9090/logout?token=${encodeURIComponent(token)}`,

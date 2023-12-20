@@ -49,10 +49,6 @@ const GameScreen = () => {
     (state: RootState) => state.gameReducer.board
   );
 
-  const logoutReq = useSelector(
-    (state: RootState) => state.loginReducer.logoutReq
-  );
-
   const isGameRunning = useSelector(
     (state: RootState) => state.gameReducer.isRunning
   );
@@ -70,15 +66,7 @@ const GameScreen = () => {
 
   const shouldRenderEndGame = isEnd && !isGameRunning;
 
-  console.log("remainingTime local state ", getRemainingTimeRef.current);
-  console.log("remainingTimeRedux ", remainingTimeRedux);
-  console.log(gameId);
-
   const location = useLocation();
-
-  console.log(
-    "total time" + allocatedTime + "remainingTime" + getRemainingTime
-  );
 
   useEffect(() => {
     let timer: any;
@@ -104,7 +92,7 @@ const GameScreen = () => {
       dispatch(updateTime(getRemainingTimeRef.current));
       dispatch(pauseGame(getRemainingTimeRef.current));
     };
-  }, [location.pathname, logoutReq]); // logoutReq - to track when the logout req is being issued, and then dispatch the latest remaining time value to global store
+  }, [location.pathname]);
 
   const isValidMove = (
     currentBoardArrangement: any,
@@ -119,11 +107,10 @@ const GameScreen = () => {
     board: any,
     gameId: any,
     token: any,
-    score: any,
     remainingTime: any
   ) => {
     // Logic for dispatching saveBoard action
-    dispatch(saveBoard(board, gameId, token, score, remainingTime));
+    dispatch(saveBoard(board, gameId, token, remainingTime));
   };
 
   const handleTileClick = (position: Position) => {
@@ -133,8 +120,7 @@ const GameScreen = () => {
           moveTile(firstSelectedTile, position, currentBoardArrangement).board,
           gameId,
           LoggedUserToken,
-          score,
-          getRemainingTime
+          getRemainingTimeRef.current
         );
       } else {
         console.log("cannot move");

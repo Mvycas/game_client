@@ -6,7 +6,7 @@ import { login } from "../thunks/userThunk";
 import { RootState } from "../store";
 import { AppDispatch } from "../store";
 import "./formStyle.css";
-import { getIncompleteGamesByUserId } from "../thunks/gameThunk";
+// import { getIncompleteGamesByUserId } from "../thunks/gameThunk";
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
@@ -17,8 +17,8 @@ const LoginScreen = () => {
 
   const userLogin = useSelector((state: RootState) => state.loginReducer);
   const error = useSelector((state: RootState) => state.loginReducer.error);
-  const token = useSelector((state: RootState) => state.loginReducer.token);
-  const userId = useSelector((state: RootState) => state.loginReducer.userId);
+  // const token = useSelector((state: RootState) => state.loginReducer.token);
+  // const userId = useSelector((state: RootState) => state.loginReducer.userId);
   const isLoggedIn = userLogin?.isLoggedIn;
   const userInfo: any = userLogin?.userData;
 
@@ -46,12 +46,12 @@ const LoginScreen = () => {
   };
 
   // Use useEffect to react to changes in the login state
-  useEffect(() => {
-    if (isLoggedIn && userId != null && token) {
-      // Now that we have a confirmed login, dispatch the getIncompleteGames action
-      dispatch(getIncompleteGamesByUserId(userId, token));
-    }
-  }, [dispatch, isLoggedIn, userId, token]);
+  // useEffect(() => {
+  //   if (isLoggedIn && userId != null && token) {
+  //     // Now that we have a confirmed login, dispatch the getIncompleteGames action
+  //     dispatch(getIncompleteGamesByUserId(userId, token));
+  //   }
+  // }, [dispatch, isLoggedIn, userId, token]);
 
   return (
     <div className="profile-container">
