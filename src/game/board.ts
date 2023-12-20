@@ -90,7 +90,6 @@ export function move<T>(generator: Generator<T>, board: Board<T>, first: Positio
     let gameScore = board.score;
         
     let matches = findMatches(newBoard);
-    console.log("s",matches);
     // If no matches found, "swap back" the tiles
     if (matches.length === 0) {
         newBoard = swapTiles(newBoard, first, second);

@@ -2,9 +2,9 @@ import { SyntheticEvent, useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register, setError } from "../thunks/userThunk";
-import { RootState } from "../store";
-import { AppDispatch } from "../store";
+import { register, setError } from "../../thunks/userThunk";
+import { RootState } from "../../store";
+import { AppDispatch } from "../../store";
 import "./formStyle.css";
 
 const RegisterScreen = () => {

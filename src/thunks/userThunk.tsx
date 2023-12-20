@@ -9,8 +9,9 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGOUT_FAIL,
-  USER_LOGOUT_REQ,
 } from "../constants/userConstants";
+import { RESET_GAME_STATE } from "../constants/gameConstants";
+
 import { RootState } from "../store";
 
 export const login =
@@ -23,7 +24,6 @@ export const login =
       const response = await fetch("http://localhost:9090/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // credentials: "include",
         body: JSON.stringify({
           username,
           password,
@@ -40,7 +40,7 @@ export const login =
 
         dispatch({
           type: USER_LOGIN_SUCCESS,
-          payload: userData,
+          payload: { userData, username: username },
         });
       } else {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -98,12 +98,6 @@ export const setError = (error: String) => async (dispatch: Dispatch) => {
   });
 };
 
-export const logoutReq = () => {
-  return (dispatch: Dispatch) => {
-    dispatch({ type: USER_LOGOUT_REQ });
-  };
-};
-
 export const logout =
   (): ThunkAction<void, RootState, unknown, Action<string>> =>
   async (dispatch, getState) => {
@@ -119,6 +113,7 @@ export const logout =
 
       if (logoutResponse.ok) {
         // localStorage.clear(); // Uncomment if you want to clear local storage
+        dispatch({ type: RESET_GAME_STATE });
         dispatch({ type: USER_LOGOUT });
       } else {
         // Handle non-successful logout response

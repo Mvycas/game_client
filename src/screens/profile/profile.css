@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body, input, button {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Style the outer container */
+.profile-container {
+    max-width: 400px;
+    margin: 50px auto; 
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #2a2f33; 
+    color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+}
+
+/* Style the title */
+.profile-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #17a2b8; 
+    font-weight: 500; 
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+
+.profile-form label {
+  display: block; 
+  margin-bottom: 8px; 
+  color: #fff; 
+  font-size: 14px; 
+}
+
+.profile-input {
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #3b4045; 
+    color: #d1d1d1; 
+    border: 2px solid #4b5258;
+    border-radius: 4px;
+    font-size: 16px; 
+}
+
+/* Style the button */
+.profile-button {
+    padding: 15px; 
+    background-color: #0d7377; 
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px; 
+    font-weight: 700; 
+}
+
+.profile-button:hover {
+    background-color: #26a69a; 
+    border-color: #26a69a;
+}

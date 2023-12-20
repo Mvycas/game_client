@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,8 +12,8 @@ import "./gameScreen.css";
 import canva from "../../images/Untitled.png";
 import randomIntFromInterval from "../../helperFunctions/randomIntFromInterval";
 import EndGame from "./EndGame";
-import { pauseGame, resumeGame, updateTime } from "../../Actions/GameTime";
-import { useLocation, useNavigate } from "react-router-dom";
+import { pauseGame, resumeGame } from "../../Actions/GameTime";
+import { useLocation } from "react-router-dom";
 
 const GameScreen = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -41,16 +42,19 @@ const GameScreen = () => {
   const isLoggedIn = useSelector(
     (state: RootState) => state.loginReducer.isLoggedIn
   );
+  const username = useSelector(
+    (state: RootState) => state.loginReducer.username
+  );
   const LoggedUserToken = useSelector(
     (state: RootState) => state.loginReducer.token
   );
 
-  const currentBoardArrangement = useSelector(
-    (state: RootState) => state.gameReducer.board
+  const isGamePaused = useSelector(
+    (state: RootState) => state.gameReducer.isPaused
   );
 
-  const logoutReq = useSelector(
-    (state: RootState) => state.loginReducer.logoutReq
+  const currentBoardArrangement = useSelector(
+    (state: RootState) => state.gameReducer.board
   );
 
   const isGameRunning = useSelector(
@@ -70,15 +74,7 @@ const GameScreen = () => {
 
   const shouldRenderEndGame = isEnd && !isGameRunning;
 
-  console.log("remainingTime local state ", getRemainingTimeRef.current);
-  console.log("remainingTimeRedux ", remainingTimeRedux);
-  console.log(gameId);
-
   const location = useLocation();
-
-  console.log(
-    "total time" + allocatedTime + "remainingTime" + getRemainingTime
-  );
 
   useEffect(() => {
     let timer: any;
@@ -101,10 +97,11 @@ const GameScreen = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(updateTime(getRemainingTimeRef.current));
-      dispatch(pauseGame(getRemainingTimeRef.current));
+      if (isGameRunning) {
+        dispatch(pauseGame(getRemainingTimeRef.current));
+      }
     };
-  }, [location.pathname, logoutReq]); // logoutReq - to track when the logout req is being issued, and then dispatch the latest remaining time value to global store
+  }, [location.pathname, isGameRunning, dispatch]);
 
   const isValidMove = (
     currentBoardArrangement: any,
@@ -119,11 +116,11 @@ const GameScreen = () => {
     board: any,
     gameId: any,
     token: any,
-    score: any,
-    remainingTime: any
+    remainingTime: any,
+    username: string
   ) => {
     // Logic for dispatching saveBoard action
-    dispatch(saveBoard(board, gameId, token, score, remainingTime));
+    dispatch(saveBoard(board, gameId, token, remainingTime, username));
   };
 
   const handleTileClick = (position: Position) => {
@@ -133,8 +130,8 @@ const GameScreen = () => {
           moveTile(firstSelectedTile, position, currentBoardArrangement).board,
           gameId,
           LoggedUserToken,
-          score,
-          getRemainingTime
+          getRemainingTimeRef.current,
+          username
         );
       } else {
         console.log("cannot move");
@@ -182,29 +179,28 @@ const GameScreen = () => {
         padding: "30px",
       }}
     >
-      <Button
-        className="button-64"
-        onClick={() => dispatch(pauseGame(getRemainingTime))}
-        style={{
-          marginBottom: "2rem",
-          width: "16rem",
-          height: "3rem",
-        }}
-      >
-        pause
-      </Button>
-
-      <Button
-        className="button-64"
-        onClick={() => dispatch(resumeGame())}
-        style={{
-          marginBottom: "2rem",
-          width: "16rem",
-          height: "3rem",
-        }}
-      >
-        resume
-      </Button>
+      {isGamePaused && isLoggedIn && !isEnd && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <Button
+            className="button-64"
+            onClick={() => dispatch(resumeGame())}
+            style={{
+              marginBottom: "2rem",
+              width: "16rem",
+              height: "3rem",
+            }}
+          >
+            resume
+          </Button>
+        </div>
+      )}
 
       {/* Conditionally render EndGame */}
       {shouldRenderEndGame && (
@@ -243,7 +239,15 @@ const GameScreen = () => {
                   Create New Game
                 </Button>
               ) : (
-                <p>You need to log in to start a new game.</p>
+                <p
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  You need to log in to start a new game.
+                </p>
               )}
             </div>
           </div>

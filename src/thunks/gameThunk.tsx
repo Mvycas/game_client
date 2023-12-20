@@ -4,25 +4,21 @@ import {
   GAME_STARTED,
   REQ_FAILED,
   GAME_END,
-  GET_UNFINISHED_GAME_SUCCESS,
-  GET_UNFINISHED_GAME_FAILED,
-  REQ_UNFINISHED_GAME,
-  SAVE_BOARD_REQ
+  SAVE_BOARD_REQ,
 } from "../constants/gameConstants";
 
 export const saveBoard = (
   randomColorArrangement: any,
   gameId: number,
   userToken: string,
-  score: number,
-  timeLeft: number
+  timeLeft: number,
+  username: string
 ) => {
   return async (dispatch: Dispatch) => {
     try {
       dispatch({
         type: SAVE_BOARD_REQ,
       });
-      // Send a PATCH request to the server to update the game
       const response = await fetch(
         `http://localhost:9090/games/${gameId}?token=${userToken}`,
         {
@@ -30,7 +26,11 @@ export const saveBoard = (
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ score, userToken, timeLeft }), //////////////////////////TIME LEFT MY CAUSE ERRORS ON BACKEND
+          body: JSON.stringify({
+            score: randomColorArrangement.score,
+            userToken,
+            username,
+          }),
         }
       );
 
@@ -74,7 +74,7 @@ export const endGame = (gameId: number, userToken: string) => {
       }
     } catch (error: any) {
       dispatch({
-        type: REQ_FAILED, // Adjust type based on your action types
+        type: REQ_FAILED,
         payload: error.message || "Unknown error occurred",
       });
     }
@@ -115,10 +115,16 @@ export const startNewGame =
     }
   };
 
-export const getIncompleteGamesByUserId =
-  (userId: any, userToken: any) => async (dispatch: Dispatch) => {
+interface Game {
+  username: string;
+  score: number;
+  completed: boolean;
+}
+
+export const getScoreboard =
+  (currentUserUsername: string, userToken: string) =>
+  async (dispatch: Dispatch) => {
     try {
-      //Retrieve the list of games
       const response = await fetch(
         `http://localhost:9090/games?token=${userToken}`,
         {
@@ -129,29 +135,40 @@ export const getIncompleteGamesByUserId =
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch games");
-      }
+      if (response.ok) {
+        const games = await response.json();
 
-      const games = await response.json();
+        // Filter only completed games
+        const completedGames = games.filter((game: Game) => game.completed);
 
-      const incompleteGame = games.find(
-        (game: any) => !game.completed && game.user === userId
-      );
+        // Sort all scores in descending order
+        completedGames.sort((a: Game, b: Game) => b.score - a.score);
 
-      if (incompleteGame) {
+        // Use a Set to remove duplicate scores
+        const seenScores = new Set();
+        const uniqueScores = completedGames.filter((game: Game) => {
+          const duplicate = seenScores.has(game.score);
+          seenScores.add(game.score);
+          return !duplicate;
+        });
+
+        // Get the top scores and user scores after removing duplicates
+        const topScores = uniqueScores.slice(0, 10);
+        const userScores = uniqueScores
+          .filter((game: Game) => game.username === currentUserUsername)
+          .slice(0, 3);
+
         dispatch({
-          type: GET_UNFINISHED_GAME_SUCCESS,
-          payload: {
-            gameId: incompleteGame.id,
-            remainingTime: incompleteGame.timeLeft,
-            score: incompleteGame.score,
-          },
+          type: "GET_SCOREBOARD_SUCCESS",
+          payload: { topScores, userScores },
         });
       } else {
-        // Handle the case where no incomplete games are found
+        throw new Error("Failed to fetch game data");
       }
-    } catch (error) {
-      console.error("Error retrieving incomplete game:", error);
+    } catch (error: any) {
+      dispatch({
+        type: "GET_SCOREBOARD_FAILED",
+        payload: error.message || "Unknown error occurred",
+      });
     }
   };
