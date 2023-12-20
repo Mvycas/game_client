@@ -9,7 +9,7 @@ import {
   const initialState = {
     isLoggedIn: false,
     logoutReq: false,
-    userData: null,
+    username: "",
     token: null,
     userId: null,
     error: null,
@@ -23,8 +23,7 @@ import {
       case USER_LOGIN_REQ:
         return { ...state, isLoggedIn: false, error: null };
       case USER_LOGIN_SUCCESS:
-        //                                   USER DATA MEANINGLESS - FIND WAY HOW TO PARSE IT IN COMPONENT OR HOW TO REMOVE IT
-        return { ...state, isLoggedIn: true, userData: action.payload, token: action.payload.token, userId: action.payload.userId, error: null };
+        return { ...state, isLoggedIn: true, token: action.payload.userData.token, userId: action.payload.userData.userId, username: action.payload.username, error: null };
       case USER_LOGIN_FAIL:
         return { ...state, isLoggedIn: false, error: action.payload };
       case USER_LOGOUT:

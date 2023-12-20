@@ -15,12 +15,12 @@ const LoginScreen = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userLogin = useSelector((state: RootState) => state.loginReducer);
   const error = useSelector((state: RootState) => state.loginReducer.error);
   // const token = useSelector((state: RootState) => state.loginReducer.token);
   // const userId = useSelector((state: RootState) => state.loginReducer.userId);
-  const isLoggedIn = userLogin?.isLoggedIn;
-  const userInfo: any = userLogin?.userData;
+  const isLoggedIn = useSelector(
+    (state: RootState) => state.loginReducer.isLoggedIn
+  );
 
   const interpretErrorMessage = (error: any) => {
     console.log(error);
@@ -34,12 +34,12 @@ const LoginScreen = () => {
     if (isLoggedIn) {
       navigate("/");
     }
-  }, [userInfo, navigate, isLoggedIn]);
+  }, [navigate, isLoggedIn]);
 
   const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
     // Just dispatch the login action, don't chain then() here
-    dispatch(login(username, password)).catch((error) => {
+    dispatch(login(username, password)).catch((error: any) => {
       // Handle any errors that occurred during the login process
       console.error("Login failed:", error);
     });

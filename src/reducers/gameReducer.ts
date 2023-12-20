@@ -1,4 +1,4 @@
-import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME, UPDATE_TIME, RESET_GAME_STATE } from '../constants/gameConstants';
+import { SAVE_BOARD, GAME_STARTED, REQ_FAILED, GAME_END, PAUSE_GAME, RESUME_GAME, UPDATE_TIME, RESET_GAME_STATE, GET_SCOREBOARD_SUCCESS } from '../constants/gameConstants';
 
 interface GameBoard {
     w: number;       // Width of the board
@@ -14,8 +14,11 @@ interface GameState {
     allocatedTime: number;
     remainingTime: number;
     error: string;
+    topScores: [],
+    userScores: [],
     board: GameBoard;  
     gameId: number; 
+
 }
 
 // Pre-game (not started): isRunning === false, isEnd === false.
@@ -27,6 +30,8 @@ const initialState: GameState = {
     isEnd: false,
     error: "",
     gameId: 0,
+    topScores: [],
+    userScores: [],
     allocatedTime: 0,
     remainingTime: 0,
     isPaused: false,
@@ -58,8 +63,11 @@ const boardReducer = (state: GameState = initialState, action: any) => {
       return {...state, isPaused: false, isRunning: true};
     case UPDATE_TIME:
       return {...state, remainingTime: action.payload};
+    case GET_SCOREBOARD_SUCCESS:
+      return {...state, topScores: action.payload.topScores, userScores: action.payload.userScores};
     case RESET_GAME_STATE:
         return {...initialState};
+
     default:
       return state;
   }

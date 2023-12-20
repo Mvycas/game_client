@@ -20,7 +20,7 @@ import TheatersIcon from "@mui/icons-material/Theaters";
 import { TiUserAdd } from "react-icons/ti";
 import { endGame, saveBoard } from "../thunks/gameThunk";
 
-const settings = ["Account", "Logout"];
+const settings = ["Account", "Scoreboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -62,6 +62,10 @@ function ResponsiveAppBar() {
     if (setting === "Account") {
       handleCloseUserMenu();
       navigate("/account/edit");
+    }
+    if (setting === "Scoreboard") {
+      handleCloseUserMenu();
+      navigate("/scoreboard");
     }
     if (setting === "Logout") {
       //SHOULD UPDATE REMAINING TIME HERE

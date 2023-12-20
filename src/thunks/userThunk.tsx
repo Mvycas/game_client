@@ -42,7 +42,7 @@ export const login =
 
         dispatch({
           type: USER_LOGIN_SUCCESS,
-          payload: userData,
+          payload: { userData, username: username },
         });
       } else {
         throw new Error(`HTTP error! Status: ${response.status}`);

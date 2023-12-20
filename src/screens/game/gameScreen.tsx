@@ -41,6 +41,9 @@ const GameScreen = () => {
   const isLoggedIn = useSelector(
     (state: RootState) => state.loginReducer.isLoggedIn
   );
+  const username = useSelector(
+    (state: RootState) => state.loginReducer.username
+  );
   const LoggedUserToken = useSelector(
     (state: RootState) => state.loginReducer.token
   );
@@ -112,10 +115,11 @@ const GameScreen = () => {
     board: any,
     gameId: any,
     token: any,
-    remainingTime: any
+    remainingTime: any,
+    username: string
   ) => {
     // Logic for dispatching saveBoard action
-    dispatch(saveBoard(board, gameId, token, remainingTime));
+    dispatch(saveBoard(board, gameId, token, remainingTime, username));
   };
 
   const handleTileClick = (position: Position) => {
@@ -125,7 +129,8 @@ const GameScreen = () => {
           moveTile(firstSelectedTile, position, currentBoardArrangement).board,
           gameId,
           LoggedUserToken,
-          getRemainingTimeRef.current
+          getRemainingTimeRef.current,
+          username
         );
       } else {
         console.log("cannot move");
@@ -135,9 +140,6 @@ const GameScreen = () => {
       setFirstSelectedTile(position);
     }
   };
-
-  console.log("is paused: ", isGamePaused);
-  console.log("is END?: ", isEnd);
 
   const createNewGame = () => {
     const board = getBoard();

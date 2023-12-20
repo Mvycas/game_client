@@ -16,6 +16,9 @@ export const UPDATE_TIME = "UPDATE_TIME";
 export const SAVE_BOARD_REQ = "SAVE_BOARD_REQ";
 export const RESET_GAME_STATE = "RESET_GAME_STATE";
 
+export const GET_SCOREBOARD_SUCCESS = "GET_SCOREBOARD_SUCCESS";
+export const GET_SCOREBOARD_FAILED = "GET_SCOREBOARD_FAILED";
+
 export const candyColors = {
   white,
   black,
