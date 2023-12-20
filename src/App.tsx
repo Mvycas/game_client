@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LoginScreen from "./screens/loginScreen";
+import LoginScreen from "./screens/userAuth/loginScreen";
 import GameScreen from "./screens/game/gameScreen";
-import ScoreboardScreen from "./screens/scoreboardScreen";
+import ScoreboardScreen from "./screens/scoreboard/scoreboardScreen";
 import Profile from "./screens/profile/profile";
 
 import "./App.css";
-import RegisterScreen from "./screens/registerScreen";
+import RegisterScreen from "./screens/userAuth/registerScreen";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ResponsiveAppBar from "./components/navbar";
 

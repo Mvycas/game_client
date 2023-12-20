@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { AppDispatch } from "../store";
-import { getScoreboard } from "../thunks/gameThunk";
+import { RootState } from "../../store";
+import { AppDispatch } from "../../store";
+import { getScoreboard } from "../../thunks/gameThunk";
 import "./scoreboardScreen.css";
 
 const ScoreboardScreen = () => {

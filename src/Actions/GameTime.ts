@@ -14,11 +14,6 @@ export const resumeGame = () => {
     };
   };
 
-export const updateTime = (remainingTime:number) => {
-  return (dispatch: Dispatch) => {
-    dispatch({ type: 'UPDATE_TIME', payload: remainingTime });
-  };
-};
 
 
   

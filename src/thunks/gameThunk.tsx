@@ -16,8 +16,6 @@ export const saveBoard = (
 ) => {
   return async (dispatch: Dispatch) => {
     try {
-      console.log(randomColorArrangement);
-
       dispatch({
         type: SAVE_BOARD_REQ,
       });
@@ -76,7 +74,7 @@ export const endGame = (gameId: number, userToken: string) => {
       }
     } catch (error: any) {
       dispatch({
-        type: REQ_FAILED, 
+        type: REQ_FAILED,
         payload: error.message || "Unknown error occurred",
       });
     }
