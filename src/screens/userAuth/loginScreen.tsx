@@ -1,4 +1,10 @@
-import { SyntheticEvent, useState, useEffect } from "react";
+import {
+  SyntheticEvent,
+  useState,
+  useEffect,
+  useRef,
+  MutableRefObject,
+} from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +15,8 @@ import "./formStyle.css";
 // import { getIncompleteGamesByUserId } from "../thunks/gameThunk";
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const usernameRef = useRef() as MutableRefObject<HTMLInputElement>;
+  const passwordRef = useRef() as MutableRefObject<HTMLInputElement>;
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,7 +29,7 @@ const LoginScreen = () => {
 
   const interpretErrorMessage = (error: any) => {
     console.log(error);
-    if (username.trim() === "") {
+    if (!usernameRef.current?.value) {
       return "Username cannot be empty.";
     }
     return "There was an issue with your login. Please check your credentials and try again.";
@@ -37,6 +43,8 @@ const LoginScreen = () => {
 
   const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
+    const username = usernameRef.current?.value;
+    const password = passwordRef.current?.value;
     // Just dispatch the login action, don't chain then() here
     dispatch(login(username, password)).catch((error: any) => {
       // Handle any errors that occurred during the login process
@@ -60,8 +68,7 @@ const LoginScreen = () => {
           <Form.Control
             type="string"
             placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.currentTarget.value)}
+            ref={usernameRef}
             className="profile-input"
           />
         </Form.Group>
@@ -71,8 +78,7 @@ const LoginScreen = () => {
           <Form.Control
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
+            ref={passwordRef}
             className="profile-input"
           />
         </Form.Group>
